@@ -1,0 +1,101 @@
+/* 
+    Document   : templates.tpl
+    Created on : 03.02.2013, 13:24:12
+    Author     : Martin
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/*--- main ---*/
+body {
+    background-color: white;
+    
+    font-family: 'Arial';
+    font-size: 12pt;
+}
+
+#main {
+    width: 1200px;
+    margin: 0px auto;
+    
+    position: relative;
+    
+    border: 2px solid activeborder;
+    border-radius: 3px;
+    
+    background-color: rgb(240,240,240);
+    
+    padding: 5px;
+}
+
+.content {
+    position: relative;
+    
+    top: 50px;
+    
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.tmpl_picture {
+    position: absolute;
+    
+    float: right;
+    
+}
+
+.tmpl_box {
+    position: absolute;
+    
+    border: 1px solid lightgray;
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+    
+    background-color: rgba(210,210,210,.6);
+    
+    padding: 5px;
+    
+    font-size: 10pt;
+    
+}
+
+.tmpl_infos .tmpl_table_box {
+    display: none; 
+    z-index: 5;
+    
+    overflow: auto;
+} 
+.tmpl_box table {
+    position: absolute;
+    z-index: 98;
+}
+
+.tmpl_infos .tmpl_title {
+    float: left;
+    display: none;
+    
+    position: absolute;
+    z-index: 100;
+    
+    font-size: 12pt;
+    font-weight: bold;
+    margin-left: 5px;
+    margin-top: 15px;
+}
+
+.tmpl_hr {
+    color: rgb(190,190,190);
+    height: 2px;
+    z-index: 100;
+    
+}
+
+.tmpl_table_key {
+    font-weight: bold;
+    width: 100px;
+}
+
+.tmpl_table_value {
+    
+}

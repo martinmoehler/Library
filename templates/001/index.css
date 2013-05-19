@@ -1,0 +1,78 @@
+/* 
+    Document   : index
+    Created on : 11.03.2013, 13:32:51
+    Author     : Martin Möhler
+*/
+
+root { 
+    display: block;
+}
+
+body {
+    padding-top: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 20px;
+    margin: 0px;
+    
+    background-image: url("gfx/filmkörnung blau.png");
+}
+
+#header {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    
+    width: 100%;
+    height: 180px;
+    
+    background-color: rgba(100,200,60,.7);
+    
+    box-shadow: 0px 0px 5px #222222;
+    
+    padding: 20px;
+}
+
+#body {
+    position: relative;
+    width: 1000px;
+    height: 500px;
+    
+    top: 225px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    
+    background-color: rgba(158,215,239,0.7);
+    padding: 10px;
+    
+    border: 2px solid gray;
+    box-shadow: 0px 0px 5px #222222;
+    
+    border-radius: 5px;
+    
+    
+   
+    
+}
+
+#slide1 {
+    position: absolute;
+    left: 200px;
+    top: 100px;
+}
+
+#slide2 {
+    position: absolute;
+    left: 350px;
+    top: 50px;
+}
+#title {
+    position: absolute;
+    left: 500px;
+    top: 75px;
+    display: none;
+}
+
+#body img {
+    margin: 10px;
+}

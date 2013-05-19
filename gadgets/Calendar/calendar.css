@@ -1,0 +1,44 @@
+/* 
+    Document   : calendar
+    Created on : 25.04.2013, 22:16:43
+    Author     : Martin Möhler
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+.dates li, td, ul  {
+    vertical-align: top;
+    list-style: none;
+    margin: 0;
+    padding: 0px;
+    padding-bottom: 5px;
+}
+
+.calendarWhen {
+    padding-right: 20px;
+    padding-top: 5px;
+}
+
+.calendarDate {
+    font-weight: bold;
+}
+
+.calendarTime img {
+    padding-left: 20px; 
+}
+
+.calendarWhat {
+    border: 1px solid white;
+    border-radius: 3px;
+    background-color: lightgray;
+    opacity: .7;
+    padding: 5px;
+}
+
+.calendarTitle {
+    font-weight: bold;
+}

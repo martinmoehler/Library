@@ -1,0 +1,68 @@
+
+
+body {
+    background-color: white;
+    
+    font-family: 'Arial';
+    font-size: 12pt;
+}
+
+#main {
+    width: 1000px;
+    height: 600px;
+    margin: 0px auto;
+    
+    position: relative;
+    
+    border: 2px solid activeborder;
+    border-radius: 3px;
+    
+    background-color: rgb(240,240,240);
+    
+    padding: 15px;
+    
+}
+
+.content {
+    position: relative;
+    width: 600px;
+    margin: 0 auto;
+    
+    top: 50px;
+    
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+}
+#uploadContainer {
+    position: relative;
+}
+
+#fileInput {
+    position: absolute;
+    top: -500px;
+}
+
+#dragContainer {
+    
+    height: 110px;
+    
+    position: relative;
+    
+    padding-top: 40px;
+    text-align: center;
+    
+    border: 2px dotted activeborder;
+    border-radius: 5px;
+    
+    color: gray;
+    background-color: rgb(250,250,250);
+    
+} hr {
+    width: 60%;
+    color:gray;
+}
+
+.dragOver {
+    background-color: chartreuse !important;
+}

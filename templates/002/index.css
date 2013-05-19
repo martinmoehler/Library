@@ -1,0 +1,133 @@
+/* 
+    Document   : index
+    Created on : 11.03.2013, 13:32:51
+    Author     : Martin Möhler
+*/
+
+root { 
+    display: block;
+}
+
+body {
+    background-color: #656262;
+    padding: 0px;
+    margin: 0px;
+    
+    
+}
+
+#header {
+    position: absolute;
+    width: 100%;
+    height: 60px;
+    top: 145px;
+    
+    background-color: #1a1a1a;
+    display: table-cell;
+    text-align: center;
+}
+
+#main {
+    position: relative;
+    width: 1200px;
+    top: 215px;
+    margin: 0 auto;
+}
+
+#left {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 200px;
+    height: 600px;
+    
+    overflow: hidden;
+    
+    background-color: #1a1a1a;
+}
+
+#body {
+    position: relative;
+    top: 0px;
+    margin: 0 auto;
+    width: 750px;
+    height: 580px;
+    
+    background-color: #bfbfbf;
+    
+    padding: 10px;
+}
+
+#right {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 200px;
+    height: 600px;
+    
+    overflow: hidden;
+    
+    
+    background-color: #1a1a1a;
+}
+
+.front_img_box img {
+    height: 600px;
+}
+
+#l_img_box {
+    margin-left: -80px;
+}
+
+#r_img_box {
+    margin-left: -120px;
+}
+
+
+#header ul {
+    list-style: none;
+    width: 600px;
+    margin: 0 auto;
+    color: white;
+    font-size: large;
+    font-weight: bold;
+    text-align: center;
+    
+} li {
+    padding: 5px;
+    float: left;
+    display: table-cell;
+    width: 100px;
+    height: 30px;
+    vertical-align: central;
+}
+
+#header ul li:hover {
+    color: gray;
+    cursor: pointer
+}
+
+#slide1 {
+    position: absolute;
+    left: 200px;
+    top: 90px;
+}
+
+#slide2 {
+    position: absolute;
+    left: 1250px;
+    top: 40px;
+}
+#title {
+    position: absolute;
+    left: 700px;
+    top: 65px;
+    display: none;
+}
+#title_box {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 135px;
+}
