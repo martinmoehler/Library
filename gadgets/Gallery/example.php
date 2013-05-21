@@ -16,7 +16,7 @@ require_once 'gadgets/DynamicTable/conf/dynamicTable.init.php';
 	<meta name="copyright" content="(c) Copyright 2013 Martin Möhler" />
         <title>Gallery</title>
 
-        <link href="style.css" rel="stylesheet" type="text/css">
+        <link href="gallery.css" rel="stylesheet" type="text/css">
         <link href="gadgets/DynamicTable/dynamicTable.css" rel="stylesheet" type="text/css">
         <script src="scripts/jquery.js" type="text/javascript"></script>
         <script src="classes/gallery.class.js" type="text/javascript"></script>
@@ -25,6 +25,7 @@ require_once 'gadgets/DynamicTable/conf/dynamicTable.init.php';
         <script type="text/javascript">
             
             var init = null;
+            var table = null;
             var galleryData = null; 
             var galleryOptions = null;
             var galleryContainer = null;                            
@@ -41,14 +42,12 @@ require_once 'gadgets/DynamicTable/conf/dynamicTable.init.php';
                 
                 Gallery = new classGallery ( galleryOptions, galleryData, galleryContainer, init );
 
-                $.ajaxSetup ({
-                    cache: false
-                });
+                
                 
                 
             });
         </script>
-        <script src="gadgets/DynamicTable/scripts/animation.js" type="text/javascript"></script>
+        
             
         
     </head>

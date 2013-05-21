@@ -7,7 +7,7 @@ function Template(containerID, _init){
     
     this.container = $('#'+containerID);
     this.position = this.container.position();
-
+    
     this.openHeight = init['tmpl_popUpHeight'];
     this.openWidth = init['tmpl_popUpWidth'];
     this.openTop = this.position.top - (init['tmpl_popUpHeight'] - init['tmpl_height'])/ 2;
@@ -34,14 +34,13 @@ function Template(containerID, _init){
         this.status = "progress";
 
         container = this.container;
-
+        
+        this.container.css('zIndex', this.openZIndex);
         this.container.animate({
             height: this.openHeight , 
             width: this.openWidth ,
             top: this.openTop,
-            left: this.openLeft,
-            zIndex: this.openZIndex
-            
+            left: this.openLeft
         }, init['tmpl_animationTime'] );
 
         $('div.tmpl_title_box', this.container).animate({

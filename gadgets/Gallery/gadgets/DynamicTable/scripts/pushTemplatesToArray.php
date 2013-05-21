@@ -9,11 +9,16 @@
     
     require_once '../conf/dynamicTable.init.php';
     
-    $table = new DynamicTable($init, $templatesData);
+    
+    
     foreach ($templatesData as $gallery => $pictures) {
+        $table = new DynamicTable($init, $templatesData, $gallery);
         $index = 0;
         foreach ($templatesData[$gallery] as $picture => $data) {
             $templatesData[$gallery][$picture]['templateHTML'] = $table->printTemplate('../templates/dynamicTable.tpl.php',$gallery,$index, true);
+            $templatesData[$gallery]['tableData']['width'] = $table->getWidth();
+            $templatesData[$gallery]['tableData']['height'] = $table->getHeight();
+            $templatesData[$gallery]['tableData']['log'] = $table->getLog();
             $index++;
         }
     }

@@ -19,7 +19,7 @@
         PREFIX.'height'=>90,              //Höhe eines Templates
         PREFIX.'picSize'=>90,             //Größe des Bildes (quadratisch)
         PREFIX.'picOpenSize'=>150,        //Größe des Bildes (quadratisch)
-        PREFIX.'picOpacity'=>.3,          //Opacity des Bildes
+        PREFIX.'picOpacity'=>1,          //Opacity des Bildes
         PREFIX.'picPosition'=>'center',   //(left|center|right)
         PREFIX.'rowHeight'=>110,          //Reihenhöhe 
         PREFIX.'columnWidth'=>110,        //Spaltenbreite

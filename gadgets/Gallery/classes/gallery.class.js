@@ -22,13 +22,22 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
     
     var Gallery = null;
     var tmplHTML = null;
-    var galleryData = null;
+    var galleryData = new Array();
+    var tableData = {};
     var galleryContainer = null;
     var dynamicTableInit = null;
     var dynamicTableTemplate = false;
-    
+    var galleryTable = null;
+    var galleryChooserFilled = false;
     
 //--- Getters and Settets ---//
+    this.getTable = function () {
+        return galleryTable;
+    };
+    this.setTable = function ( _table ) {
+        galleryTable = _table;
+        table = _table;
+    };
     this.setInstance = function () {
         Gallery = this;
     };
@@ -51,6 +60,16 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         galleryData = _galleryData;
         
     };
+    this.getTableData = function( _gallery ) {
+        if (_gallery !== undefined) {
+            return tableData[_gallery];
+        }
+        return tableData;
+    };
+    this.setTableData = function ( _tableData ) {
+        tableData[_tableData.gallery] = _tableData.data;
+        console.log(tableData['log']);
+    };
     this.getGalleryContainer = function () {
         return galleryContainer;
     };
@@ -63,8 +82,12 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
     this.setDynamicTableInit = function ( _dynamicTableInit ) {
         dynamicTableInit = _dynamicTableInit;
     };
-
-    
+    this.isGalleryChooserFilled = function () {
+        return galleryChooserFilled;
+    };
+    this.setGalleryChooserFilled = function ( _bool ) {
+        galleryChooserFilled = _bool;
+    }
     
 //--- Methods ---//
     this.destroyHTMLStructure = function () {
@@ -101,6 +124,7 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
     };
     this.getDynamicTableTemplates = function ( _request ) {
         var request = null;
+        
         var galleryData = JSON.stringify(this.getGalleryData());
         _request !== undefined ? request = _request : request = 'gadgets/DynamicTable/scripts/pushTemplatesToArray.php';
         
@@ -109,9 +133,16 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
             type : 'POST',
             data : {'templatesData' : galleryData},
             dataType : 'json',
-            fail : function ( err ) {},
+            fail : function ( err ) {
+                $(Gallery.getGalleryContainer()).trigger('error', err);
+            },
             success : function ( data ) {
+                for(gallery in data) {
+                    Gallery.setTableData({gallery : gallery, data : data[gallery]['tableData']});
+                    delete(data[gallery]['tableData']);
+                }
                 Gallery.setGalleryData( data );
+                
                 Gallery.setDynamicTableTemplate(true);
                 container.trigger ('onDynamicTableTemplatesLoad');
             }
@@ -136,38 +167,74 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
     this.printGallery = function () {
         var template = this.getTmplHTML();
         var container = $('#'+this.getGalleryContainer());
-        container.css('display', 'none');
+        container.css('opacity', '0');
         container.append(template);
         this.fillTemplate();
+
+        container.css({
+            display : 'none',
+            opacity : 1
+        });
         container.fadeIn();
+        container.trigger('galleryprinted');
     };
-    this.fillTemplate = function () {
+    this.fillTemplate = function ( _gallery ) {
+        
+        if (_gallery == undefined) {
+            for ( var gallery in this.getGalleryData()) {
+                break;
+            }
+        };
+        
+        
         var data = this.getGalleryData();
         var init = this.getDynamicTableInit();
-        //var tableTemplate = this.getDynamicTableTemplate();
         var pictureContainer = $(this.options.pictureContainer);
         var table = {};
         
+        pictureContainer.empty();
+        if (!this.isGalleryChooserFilled()) this.fillGalleryChooser();
+        this.changePictureContainerSize(gallery);
+
+        for (i in data[gallery]) {
+            //var table = <?php echo $table->printDataAsJSObject() ?>;
+            var fileName = data[gallery][i].fullImg
+                    .replace(/\\/g,'/')
+                    .split('/');
+            fileName = fileName[fileName.length -1].substr(0, fileName[fileName.length -1].indexOf("."));
+
+            table[fileName] = data[gallery][i];
+            pictureContainer.append(data[gallery][i]['templateHTML']);
+            $('#tmpl_box-').attr('id', 'tmpl_box-'+i);
+            table[fileName].template = new Template('tmpl_box-'+fileName, init);
+        }
+        
+        this.setTable(table);
+        $('#'+Gallery.getGalleryContainer()).trigger('tableloaded');
+        
+    };
+    this.fillGalleryChooser = function () {
+        var data = this.getGalleryData();
         for ( gallery in data ) {
             var li = document.createElement('li');
             li.innerHTML = gallery;
             $(this.options.galleryChooser+" ul").append(li);
-            
-            
-            for (i=0; i<data[gallery].length;i++) {
-                //var table = <?php echo $table->printDataAsJSObject() ?>;
-                var fileName = data[gallery][i].fullImg
-                        .replace(/\\/g,'/')
-                        .split('/');
-                fileName = fileName[fileName.length -1].substr(0, fileName[fileName.length -1].indexOf("."));
-                
-                table[fileName] = data[gallery][i];
-                pictureContainer.append(data[gallery][i]['templateHTML']);
-                $('#tmpl_box-').attr('id', 'tmpl_box-'+i);
-                table[fileName].template = new Template('tmpl_box-'+i, init);
+        };
+        this.setGalleryChooserFilled(true);
+    };
+    this.changePictureContainerSize = function ( _gallery ) {
+        if (_gallery == undefined) {
+            for ( var gallery in this.getGalleryData()) {
+                break;
             }
-        }
-        pictureContainer.append("<script src='gadgets/DynamicTable/scripts/animation.js' type='text/javascript'></script>");
+        } else {
+            var gallery = _gallery;
+        };
+        var data = Gallery.getTableData(gallery);
+        $(this.options.pictureContainer).css({
+            width : data.width,
+            height : data.height
+        });
     };
     this.createGalleryContainer = function() {
         container = $(document.createElement('div'));
@@ -189,7 +256,14 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         
         this.printGallery();
     };
-    
+    this.galleryPrinted = function () {
+        //Reset some css.
+        var tD = this.getTableData();
+        $(this.options.pictureContainer).css({
+            width : tD['width'],
+            height : tD['height']
+        });
+    };
 
 //--- Constructor ---//
     this.construct = function () {
@@ -206,7 +280,13 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
             if (Gallery.areTemplatesLoaded()) mainContainer.trigger('onTemplateLoad');
         });
         mainContainer.on('error', function (e) {console.log(e);});
-        
+        mainContainer.on('tableloaded', function() {
+            pictureContainer = $(Gallery.options.pictureContainer);
+            pictureContainer.append("<script src='gadgets/DynamicTable/scripts/animation.js' type='text/javascript'></script>");        
+        });
+        mainContainer.on('galleryprinted', function () {
+            Gallery.galleryPrinted();
+        });
         
         _options !== null ? this.options = _options : this.options = this.defaultOptions;
         _galleryData !== null ? this.setGalleryData(_galleryData) : this.setGalleryData(this.readFromHTMLStructure());
@@ -214,6 +294,10 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         
         this.defaultOptions = null;
         this.readGalleryTemplate();
+        
+        for (var firstGallery in this.getGalleryData()) {
+            break;
+        }
         this.getDynamicTableTemplates();
         
         

@@ -26,7 +26,8 @@
          */
         private $_templateVars;
         
-        public function __construct(array $init, array $_templatesData = null) {
+        
+        public function __construct(array $init, array $_templatesData = null, $_gallery = null) {
             foreach ($init as $key => $value) {
                 if (strstr($key, "tmpl_")) {
                     $this->_templateVars[$key] = $value;
@@ -56,6 +57,8 @@
                 $this->_log('.Datenbank gelesen', $this->_templatesData);
 
                 $mysqli->close($mysqli);
+                
+                $this->_countReleases();
             } else {
                 //Check $_templatesData
                 
@@ -67,12 +70,12 @@
                 }
                 
                 $this->_templatesData = $_templatesData;
-                
+                $this->_countReleases($_gallery);
                 $this->_log('.Daten gelesen', $this->_templatesData);
             }
             // -----------------------------------------------------------
             
-            $this->_countReleases();
+            
         }
         
         
@@ -133,8 +136,7 @@
             } else {
                 return $printText;
             }
-        }
-        
+        }      
         public function printTemplates($_templatePath, $_bool = FALSE) {
             
             if(!file_exists($_templatePath)) {
@@ -172,9 +174,11 @@
             }
         }
 
-        private function _countReleases(){
+        private function _countReleases($_gallery){
+            $this->_log('count', $this->_numberOfTemplates);
+            if ($this->_numberOfTemplates) return $this->_numberOfTemplates;
+            $number = count($this->_templatesData[$_gallery]);
             
-            $number = count($this->_templatesData);
             $this->_numberOfTemplates = $number;
             return $number;
         }
@@ -192,11 +196,9 @@
             $this->_logString .= $log_methode.$log_string."<br>\n";
 
         }
-        
         public function getLog(){
             return $this->_logString;
-        }
-        
+        }     
         public function deleteLog(){
             $this->_logString = "";
             return true;
@@ -204,10 +206,14 @@
         
         public function getHeight(){
             
-            $rows = intval($this->_countReleases() / $this->_templateVars['tmpl_columns']);
-            if ( ($this->_countReleases() % $this->_templateVars['tmpl_columns']) > 0) {
+            $rows = intval($this->_numberOfTemplates / $this->_templateVars['tmpl_columns']);
+            $this->_log("countRele", $this->_numberOfTemplates);
+            $this->_log("columns", $this->_templateVars['tmpl_columns']);
+            $this->_log("rows", $rows);
+            if ( ($this->_numberOfTemplates % $this->_templateVars['tmpl_columns']) > 0) {
                 $rows += 1;
             }
+            
             return $rows * $this->_templateVars['tmpl_rowHeight'];
         }
         

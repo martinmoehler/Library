@@ -3,7 +3,7 @@
     var id = "";
     var lastId = "";
     var lastObject = "";
-
+    
     $(".tmpl_box").click(function(){
         if (init['tmpl_openEvent'] !== 'click') return;
 
@@ -31,13 +31,14 @@
         if (id) lastId = "tmpl_box-"+ id;
         id = con.attr('id').split("-")[1];
 
-        if (lastId) lastObject = $("div.tmpl_title",'#'+lastId).html().replace(/ /g, "_"); 
-        object = $("div.tmpl_title", con).html().replace(/ /g, "_");
-
+        if (lastId) lastObject = lastId.split("-")[1]; //$("div.tmpl_title",'#'+lastId).html().replace(/ /g, "_"); 
+        //object = $("div.tmpl_title", con).html().replace(/ /g, "_");
+        object = id;
         if(lastObject) {
             table[lastObject].template.clearAnimations();
         }
         if (table[object].template.status !== "opened") table[object].template.open();
+        
     });
 
     $(".tmpl_box").mouseleave(function(){
@@ -48,8 +49,9 @@
         if (id) lastId = "tmpl_box-"+ id;
         id = con.attr('id').split("-")[1];
 
-        if (lastId) lastObject = $("div.tmpl_title",'#'+lastId).html().replace(/ /g, "_");  
-        object = $("div.tmpl_title", con).html().replace(/ /g, "_");
+        if (lastId) lastObject = lastId.split("-")[1]; //$("div.tmpl_title",'#'+lastId).html().replace(/ /g, "_");  
+        //object = $("div.tmpl_title", con).html().replace(/ /g, "_");
+        object = id;
 
         if(lastObject) {
             table[lastObject].template.clearAnimations();

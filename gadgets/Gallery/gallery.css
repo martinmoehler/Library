@@ -9,4 +9,46 @@
 root { 
     display: block;
 }
+#pictureBox {
+    position: relative;
+    
+}
+#pictureContainer {
+    position: relative;
+    margin: 0px auto;
+    
+    width: 500px;
+    height: 500px;
+    
+    background-color: lightsteelblue;
+    padding: 10px;
+}
 
+#previous {
+    position: absolute;
+    left: 10px;
+    top: 0px;
+    height: 100%;
+    width: 40px;
+    line-height: 500px;
+}
+
+#next {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    height: 100%;
+    width: 40px;
+    line-height: 500px;
+}
+
+#next img, #previous img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 25px;
+    height: 40px;
+}
