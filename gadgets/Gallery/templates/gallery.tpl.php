@@ -25,4 +25,5 @@
         <div id="next"><img title="Next Pictures"src="gfx/right.png" width="25px" alt="Next Pictures" onclick="Gallery.showNextPictures();"></div>
         
     </div>
+    <div class="spacer" style="clear: both;"></div>
 </div>

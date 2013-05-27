@@ -60,7 +60,13 @@
         'pictureBox' => '#pictureBox',
         'previousBox' => '#previous',
         'nextBox' => '#next',
-        'pictureContainer' => '#pictureContainer'
+        'pictureContainer' => '#pictureContainer',
+        
+        //Options to define the behaviour of the Gallery
+        'maxPicturesPerScreen' => 8,
+        'dynamicallyChangeGallerySize' => false
+        
+        
     );
     
 ?>

@@ -25,10 +25,13 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
     var galleryData = new Array();
     var tableData = {};
     var galleryContainer = null;
+    var gallerySize = null;
+    var selectedGallery = null;
+    var galleryTable = null;
     var dynamicTableInit = null;
     var dynamicTableTemplate = false;
-    var galleryTable = null;
     var galleryChooserFilled = false;
+    var firstPictureIndex = null;
     
 //--- Getters and Settets ---//
     this.getTable = function () {
@@ -88,7 +91,25 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
     this.setGalleryChooserFilled = function ( _bool ) {
         galleryChooserFilled = _bool;
     }
-    
+    this.getSelectedGallery = function () {
+        return selectedGallery;
+    };
+    this.setSelectedGallery = function ( _gallery ) {
+        selectedGallery = _gallery;
+    };
+    this.getFirstPictureIndex = function () {
+        return firstPictureIndex || 0;
+    };
+    this.setFirstPictureIndex = function ( _index ) {
+        firstPictureIndex = _index;
+    };
+    this.getGallerySize = function () {
+        return gallerySize;
+    };
+    this.setGallerySize = function ( _size ) {
+        gallerySize = _size;
+    };
+
 //--- Methods ---//
     this.destroyHTMLStructure = function () {
         $(this.options.gallerySelector).remove();
@@ -184,6 +205,8 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
             for ( var gallery in this.getGalleryData()) {
                 break;
             }
+        } else {
+            gallery = _gallery;
         };
         
         
@@ -191,25 +214,49 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         var init = this.getDynamicTableInit();
         var pictureContainer = $(this.options.pictureContainer);
         var table = {};
+        var firstIndex = this.getFirstPictureIndex();
         
         pictureContainer.empty();
         if (!this.isGalleryChooserFilled()) this.fillGalleryChooser();
-        this.changePictureContainerSize(gallery);
+        
 
         for (i in data[gallery]) {
-            //var table = <?php echo $table->printDataAsJSObject() ?>;
-            var fileName = data[gallery][i].fullImg
-                    .replace(/\\/g,'/')
-                    .split('/');
-            fileName = fileName[fileName.length -1].substr(0, fileName[fileName.length -1].indexOf("."));
+            if (parseInt(i) >= firstIndex && parseInt(i) < firstIndex + this.options.maxPicturesPerScreen) {
+                var fileName = data[gallery][i].fullImg
+                        .replace(/\\/g,'/')
+                        .split('/');
+                fileName = fileName[fileName.length -1].substr(0, fileName[fileName.length -1].indexOf("."));
 
-            table[fileName] = data[gallery][i];
-            pictureContainer.append(data[gallery][i]['templateHTML']);
-            $('#tmpl_box-').attr('id', 'tmpl_box-'+i);
-            table[fileName].template = new Template('tmpl_box-'+fileName, init);
+                table[fileName] = data[gallery][i];
+                pictureContainer.append(data[gallery][i]['templateHTML']);
+                var box = $('#tmpl_box-'+fileName);
+                
+                var index = (parseInt(i) - firstIndex);
+                var row = Math.floor(index / init['tmpl_columns']);
+                var number = index % init['tmpl_columns'];
+                
+                box.css({
+                    top: row * init['tmpl_rowHeight'],
+                    left: number * init['tmpl_columnWidth']
+                });
+                table[fileName].template = new Template('tmpl_box-'+fileName, init);
+            }
         }
         
+        if (this.options.dynamicallyChangeGallerySize) {
+            this.changePictureContainerSize(gallery);
+        } else {
+            padding = 2*$('.tmpl_box').first().css('paddingLeft').slice(0,-2);
+            $(this.options.pictureContainer).css({
+                width: init['tmpl_columns'] * init['tmpl_columnWidth'] - (init['tmpl_columnWidth'] - init['tmpl_width']) - padding,
+                height: (Gallery.options.maxPicturesPerScreen / init['tmpl_columns']) * init['tmpl_rowHeight'] - (init['tmpl_rowHeight'] - init['tmpl_height'])
+            });
+        }
+    
+        this.setFirstPictureIndex ( firstIndex );
+        this.setSelectedGallery(gallery);
         this.setTable(table);
+        this.setGallerySize($.assocArraySize(data[gallery]));
         $('#'+Gallery.getGalleryContainer()).trigger('tableloaded');
         
     };
@@ -218,6 +265,15 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         for ( gallery in data ) {
             var li = document.createElement('li');
             li.innerHTML = gallery;
+            li.title = gallery;
+            li.className = "galleryChooserElement";
+            $(li).on('click', function () {
+                $('.galleryChooserElement').css({fontWeight : 'normal'});
+                
+                $(this).css({fontWeight : 'bold'});
+                gallery = this.innerHTML;
+                $('#'+Gallery.getGalleryContainer()).trigger('gallerychange', gallery);
+            });
             $(this.options.galleryChooser+" ul").append(li);
         };
         this.setGalleryChooserFilled(true);
@@ -249,6 +305,30 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         }
         return false;
     };
+    this.showNextPictures = function () {
+        var picturesPerScreen = this.options.maxPicturesPerScreen;
+        var firstIndex = this.getFirstPictureIndex();
+        var data = this.getGalleryData();
+        var gallery = this.getSelectedGallery();
+        var gallerySize = this.getGallerySize();
+        
+        if (gallerySize > firstIndex + picturesPerScreen) {
+            this.setFirstPictureIndex(firstIndex + picturesPerScreen);
+            this.fillTemplate(gallery);
+        }
+    };
+    this.showPreviousPictures = function () {
+        var picturesPerScreen = this.options.maxPicturesPerScreen;
+        var firstIndex = this.getFirstPictureIndex();
+        var data = this.getGalleryData();
+        var gallery = this.getSelectedGallery();
+        
+        if ((firstIndex - picturesPerScreen) >= 0) {
+            this.setFirstPictureIndex(firstIndex - picturesPerScreen);
+            this.fillTemplate(gallery);
+        }
+    };
+
 
 //--- EventHandlers ---//
     this.templatesLoaded = function() {
@@ -264,6 +344,18 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
             height : tD['height']
         });
     };
+    this.changeGallery = function ( _gallery ) {
+        if ( _gallery === this.getSelectedGallery()) {
+            return;
+        }
+        this.fillTemplate(_gallery);
+    };
+    this.firstPicturePage = function () {
+        
+    };
+    this.lastPicturePage = function () {
+        
+    };
 
 //--- Constructor ---//
     this.construct = function () {
@@ -272,6 +364,7 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         _galleryContainer !== null ? this.setGalleryContainer (_galleryContainer) : this.setGalleryContainer(this.createGalleryContainer());
         var mainContainer = $('#'+this.getGalleryContainer());
         
+        //--- EvenetListeners ---//
         mainContainer.on('onTemplateLoad', function() {Gallery.templatesLoaded();});
         mainContainer.on('onDynamicTableTemplatesLoad', function(){
             if (Gallery.areTemplatesLoaded()) mainContainer.trigger('onTemplateLoad');
@@ -287,7 +380,18 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         mainContainer.on('galleryprinted', function () {
             Gallery.galleryPrinted();
         });
-        
+        mainContainer.on('gallerychange', function (event, gallery) {
+            $('')
+            Gallery.changeGallery(gallery);
+        });
+        mainContainer.on('firstPicturePage', function() {
+            Gallery.firstPicturePage();
+        });
+        mainContainer.on('lastPicturePage', function () {
+            Gallery.lastPicturePage();
+        });
+    
+        //--- DefaultOptions ---//
         _options !== null ? this.options = _options : this.options = this.defaultOptions;
         _galleryData !== null ? this.setGalleryData(_galleryData) : this.setGalleryData(this.readFromHTMLStructure());
         _dynamicTableInit !== null ? this.setDynamicTableInit( _dynamicTableInit ) : mainContainer.trigger('error', {msg:'Configurationdata of the DynamicTable-gadget is missing!','advice':'Check the *.conf.php of the Dynamic Table for the existance of the Array and the right JSON-transmission in the index file!'});
