@@ -3,6 +3,7 @@
     var id = "";
     var lastId = "";
     var lastObject = "";
+    var dynamicTableTimeout = null;
     
     $(".tmpl_box").click(function(){
         if (init['tmpl_openEvent'] !== 'click') return;
@@ -37,11 +38,20 @@
         if(lastObject) {
             table[lastObject].template.clearAnimations();
         }
-        if (table[object].template.status !== "opened") table[object].template.open();
+        if (table[object].template.status !== "opened") {
+            dynamicTableTimeout = setTimeout(function() {
+                table[object].template.open()
+            }, init['tmpl_mouseOverTime'])
+            
+        }
+            
         
     });
 
     $(".tmpl_box").mouseleave(function(){
+        
+        clearTimeout(dynamicTableTimeout);
+        
         if (init['tmpl_openEvent'] !== 'mouseover') return;
         if (table[object].template.status !== "closed")
         con = $(this);

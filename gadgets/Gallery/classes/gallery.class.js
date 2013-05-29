@@ -27,6 +27,7 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
     var galleryContainer = null;
     var gallerySize = null;
     var selectedGallery = null;
+    var selectedPicture = null;
     var galleryTable = null;
     var dynamicTableInit = null;
     var dynamicTableTemplate = false;
@@ -97,6 +98,12 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
     this.setSelectedGallery = function ( _gallery ) {
         selectedGallery = _gallery;
     };
+    this.getSelectedPicture = function () {
+        return selectedPicture;
+    };
+    this.setSelectedPicture = function ( _picture ) {
+        selectedPicture = _picture;
+    };
     this.getFirstPictureIndex = function () {
         return firstPictureIndex || 0;
     };
@@ -111,6 +118,20 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
     };
 
 //--- Methods ---//
+    this.configureGalleryData = function ( _galleryData ) {
+        for ( var gallery in _galleryData) {
+            for ( var index in _galleryData[gallery]) {
+                _galleryData[gallery][index].index = index;
+                var fileName = _galleryData[gallery][index].fullImg
+                    .replace(/\\/g,'/')
+                    .split('/');
+                fileName = fileName[fileName.length -1].substr(0, fileName[fileName.length -1].indexOf("."));
+
+                _galleryData[gallery][index].fileName = fileName;
+            }
+        }
+        return _galleryData;
+    };
     this.destroyHTMLStructure = function () {
         $(this.options.gallerySelector).remove();
     };
@@ -190,6 +211,7 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         var container = $('#'+this.getGalleryContainer());
         container.css('opacity', '0');
         container.append(template);
+        container.append("<script src='scripts/gallery.js' type='text/javascript'></script>")
         this.fillTemplate();
 
         container.css({
@@ -267,12 +289,13 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
             li.innerHTML = gallery;
             li.title = gallery;
             li.className = "galleryChooserElement";
-            $(li).on('click', function () {
+            $(li).on('click', function (evt) {
                 $('.galleryChooserElement').css({fontWeight : 'normal'});
                 
                 $(this).css({fontWeight : 'bold'});
                 gallery = this.innerHTML;
                 $('#'+Gallery.getGalleryContainer()).trigger('gallerychange', gallery);
+                return false;
             });
             $(this.options.galleryChooser+" ul").append(li);
         };
@@ -328,8 +351,217 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
             this.fillTemplate(gallery);
         }
     };
-
-
+    this.openPictureViewer = function ( _picture ) {
+        var picPath = _picture;
+        var container = $('#'+this.getGalleryContainer());
+        var back = this.initBlockedBackground();
+        var viewer = this.initPictureViewer( picPath );
+        
+        this.setSelectedPicture( _picture );
+        
+        back.append(viewer);
+        container.append(back);
+        
+        viewer.animate({
+            width: (Gallery.options['maxPictureSize'] + 20 ) ,
+            marginLeft: -(Gallery.options['maxPictureSize']+ 20 ) / 2
+        }, function() {
+            viewer.animate({
+                height: (Gallery.options['maxPictureSize'] + 20) ,
+                marginTop: -(Gallery.options['maxPictureSize']+ 20) / 2
+            });
+        });
+    };
+    this.closePictureViewer = function () {
+        $('#backgroundBlocker')
+            .fadeOut()
+            .remove();
+        $('#pictureViewer')
+            .fadeOut()
+            .remove();
+    };
+    this.initBlockedBackground = function() {
+        var background = $(document.createElement('div'));
+        background.attr({
+           'id': 'backgroundBlocker' ,
+           'class': 'backgroundBlocker'
+        });
+        background.css({
+           position : 'absolute' ,
+           top: 0,
+           left: 0,
+           width: '100%',
+           height: '100%',
+           backgroundColor: 'rgba(0,0,0,.8)',
+           zIndex : 998
+        });
+        background.on('click', function( evt ) {
+            evt.preventDefault();
+            $('#'+Gallery.getGalleryContainer()).trigger('leavepictureviewer');
+        });
+        return background;
+    };
+    this.initPictureViewer = function(image) {
+        var viewer = $(document.createElement('div'));
+        viewer.attr({
+           'id' : 'pictureViewer'
+        });
+        viewer.css({
+            position : 'absolute',
+            top: '50%',
+            left: '50%',
+            width: '150px',
+            height: '150px',
+            marginLeft : '-75px',
+            marginTop : '-75px',
+            zIndex : 999,
+            backgroundColor: 'black'
+        });
+        
+        var img = $(document.createElement('img'));
+        img.attr({
+            src: image,
+            id: 'selectedPicture'
+        });
+        img.load( function() {
+            img.css({
+                maxHeight: Gallery.options['maxPictureSize'],
+                maxWidth: Gallery.options['maxPictureSize']
+            });
+            
+            height = img.height();
+            width = img.width();
+            
+            img.css({
+                
+                position: 'absolute',
+                left: '50%',
+                marginLeft: -(width / 2) + 'px',
+                top: '50%',
+                marginTop: -(height / 2) + 'px'
+            });
+        });
+        
+        viewer.append(img);
+        
+        var next = $(document.createElement('div'));
+        next.attr({
+            'id' : 'nextPicture'
+        });
+        
+        next.css({
+            position: 'absolute',
+            right: '0px',
+            top: '0px',
+            width: '20%',
+            height: '100%',
+            backgroundColor: 'rgba(200,200,200,.4)',
+            opacity: 0
+        });
+        next.on('click', function() {
+            $('#'+Gallery.getGalleryContainer()).trigger('pictureviewernext');
+            return false;
+        });
+        next.on('mouseenter', function() {
+            if (Gallery.options.showPictureChangers) {
+                next.animate({
+                    opacity: 1
+                });
+            }
+        });
+        next.on('mouseleave', function() {
+            if (Gallery.options.showPictureChangers) {
+                next.animate({
+                    opacity: 0
+                });
+            }
+        });
+        
+        var previous = $(document.createElement('div'));
+        previous.attr({
+            'id' : 'previousPicture'
+        });
+        
+        previous.css({
+            position: 'absolute',
+            left: 0,
+            top: '0px',
+            width: '20%',
+            height: '100%',
+            backgroundColor: 'rgba(200,200,200,.4)',
+            opacity: 0
+            
+        });
+        previous.on('click', function() {
+            $('#'+Gallery.getGalleryContainer()).trigger('pictureviewerprevious');
+            return false;
+        });
+        previous.on('mouseenter', function() {
+            if (Gallery.options.showPictureChangers) {
+                previous.animate({
+                    opacity: 1
+                });
+            }
+            
+        });
+        previous.on('mouseleave', function() {
+            if (Gallery.options.showPictureChangers) {
+                previous.animate({
+                    opacity: 0
+                });
+            }
+        });
+        
+        viewer
+            .append(next)
+            .append(previous);
+            
+        return viewer;
+    };
+    
+    this.getPictureIndex = function( _filePath ) {
+        var galleryData = this.getGalleryData();
+        for ( var gallery in galleryData ) {
+            for ( var index in galleryData[gallery]) {
+                if( galleryData[gallery][index].fullImg === _filePath || galleryData[gallery][index].thmbImg === _filePath) return parseInt(index);
+            }
+        }
+        return false;
+    };
+    this.getPicturePath = function ( _index ) {
+        var gallery = this.getSelectedGallery();
+        var galleryData = this.getGalleryData();
+        
+        return galleryData[gallery][_index].fullImg;
+    };
+    this.showNextPicture = function () {
+        var newIndex = this.getPictureIndex(this.getSelectedPicture()) + 1;
+        var gallerySize = this.getGallerySize();
+        if (newIndex >= gallerySize) newIndex = 0;
+        var newPicture = this.getPicturePath ( newIndex );
+        
+        var selectedPicture = $('#selectedPicture');
+        selectedPicture.fadeOut(100, function(){
+            selectedPicture.attr('src', newPicture);
+            selectedPicture.fadeIn(100);
+        });
+        
+        this.setSelectedPicture(newPicture);
+    };
+    this.showPreviousPicture = function () {
+        var newIndex = this.getPictureIndex(this.getSelectedPicture()) - 1;
+        var gallerySize = this.getGallerySize();
+        if (newIndex < 0) newIndex = gallerySize -1;
+        var newPicture = this.getPicturePath ( newIndex );
+        
+        var selectedPicture = $('#selectedPicture');
+        selectedPicture.fadeOut(50, function(){
+            selectedPicture.attr('src', newPicture);
+            selectedPicture.fadeIn(50);
+        });
+        
+        this.setSelectedPicture(newPicture);
+    };
 //--- EventHandlers ---//
     this.templatesLoaded = function() {
         console.log('templateLoad');
@@ -381,7 +613,6 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
             Gallery.galleryPrinted();
         });
         mainContainer.on('gallerychange', function (event, gallery) {
-            $('')
             Gallery.changeGallery(gallery);
         });
         mainContainer.on('firstPicturePage', function() {
@@ -390,10 +621,21 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         mainContainer.on('lastPicturePage', function () {
             Gallery.lastPicturePage();
         });
-    
+        mainContainer.on('enterpictureviewer', function ( evt, picture ) {
+            Gallery.openPictureViewer( picture );
+        });
+        mainContainer.on('leavepictureviewer', function () {
+            Gallery.closePictureViewer();
+        });
+        mainContainer.on('pictureviewernext', function () {
+            Gallery.showNextPicture();
+        });
+        mainContainer.on('pictureviewerprevious', function () {
+            Gallery.showPreviousPicture();
+        });
         //--- DefaultOptions ---//
         _options !== null ? this.options = _options : this.options = this.defaultOptions;
-        _galleryData !== null ? this.setGalleryData(_galleryData) : this.setGalleryData(this.readFromHTMLStructure());
+        _galleryData !== null ? this.setGalleryData(this.configureGalleryData(_galleryData)) : this.setGalleryData(this.configureGalleryData(this.readFromHTMLStructure()));
         _dynamicTableInit !== null ? this.setDynamicTableInit( _dynamicTableInit ) : mainContainer.trigger('error', {msg:'Configurationdata of the DynamicTable-gadget is missing!','advice':'Check the *.conf.php of the Dynamic Table for the existance of the Array and the right JSON-transmission in the index file!'});
         
         this.defaultOptions = null;

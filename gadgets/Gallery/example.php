@@ -19,6 +19,7 @@ require_once 'gadgets/DynamicTable/conf/dynamicTable.init.php';
         <link href="gallery.css" rel="stylesheet" type="text/css">
         <link href="gadgets/DynamicTable/dynamicTable.css" rel="stylesheet" type="text/css">
         <script src="scripts/jquery.js" type="text/javascript"></script>
+        
         <script src="classes/gallery.class.js" type="text/javascript"></script>
         <script src="gadgets/DynamicTable/classes/dynamicTable.class.js" type="text/javascript"></script>
         
