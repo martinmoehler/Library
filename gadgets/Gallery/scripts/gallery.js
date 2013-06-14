@@ -6,7 +6,7 @@ $('#galleryChooserContainer').on('mouseenter', function() {
 
     galleryTimeout = setTimeout(function(){
         $('#galleryChooserContainer').animate({
-            left : '0px'
+            right : '0px'
         }, function () {
             galleryChooserState = 'opened';
         });
@@ -14,10 +14,10 @@ $('#galleryChooserContainer').on('mouseenter', function() {
 });
 
 $('#galleryChooserContainer').on('mouseleave', function() {
-    $(this).css('backgroundColor', 'rgb(220,220,220)');
+    $(this).css('backgroundColor', 'rgb(160,160,160)');
     clearTimeout(galleryTimeout);
     $('#galleryChooserContainer').animate({
-        left : '-130px'
+        right : '-130px'
     }, function() {
         galleryChooserState = 'closed';
     });
@@ -26,16 +26,16 @@ $('#galleryChooserContainer').on('mouseleave', function() {
 $('#galleryChooserContainer').on('click', function() {
     clearTimeout(galleryTimeout);
     if(galleryChooserState === "opened") {
-        $(this).css('backgroundColor', 'rgb(220,220,220)');
+        $(this).css('backgroundColor', 'rgb(160,160,160)');
         
         $('#galleryChooserContainer').animate({
-            left : '-130px'
+            right : '-130px'
         }, function() {
             galleryChooserState = 'closed';
         });
     } else {
         $('#galleryChooserContainer').animate({
-            left : '0px'
+            right : '0px'
         }, function () {
             galleryChooserState = 'opened';
         });

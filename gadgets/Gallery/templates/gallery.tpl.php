@@ -7,10 +7,13 @@
 ?>
 
 <div id="galleryContainer">
-    <div class="galleryHeader">
-        <h1>Galerie</h1>
+    <div id="galleryHeader">
+        <h1></h1>
     </div>
     <div id="galleryChooserContainer">
+        <div id="galleryChooser_lbl">
+            <img src="gfx/galerien_white.png" alt="Galerien" width="15">
+        </div>
         <ul>
             
         </ul>
@@ -25,6 +28,9 @@
         <!--
         <div id="next"><img title="Next Pictures"src="gfx/right.png" width="25px" alt="Next Pictures" onclick="Gallery.showNextPictures();"></div>
         -->
+    </div>
+    <div id="picturePageChooser">
+        
     </div>
     <div class="spacer" style="clear: both;"></div>
 </div>

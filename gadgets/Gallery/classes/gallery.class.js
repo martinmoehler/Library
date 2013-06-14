@@ -25,7 +25,7 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
     var galleryData = new Array();
     var tableData = {};
     var galleryContainer = null;
-    var gallerySize = null;
+    var gallerySize = null;             //Anzahl von Bildern in der Galerie
     var selectedGallery = null;
     var selectedPicture = null;
     var galleryTable = null;
@@ -33,8 +33,22 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
     var dynamicTableTemplate = false;
     var galleryChooserFilled = false;
     var firstPictureIndex = null;
+    var picturePages = null;            //Anzahl der Bilder-Seiten
+    var selectedPicturePage = null; 
     
 //--- Getters and Settets ---//
+    this.getSelectedPicturePage = function() {
+        return selectedPicturePage;
+    };
+    this.setSelectedPicturePage = function( _selectedPicturePage ) {
+        selectedPicturePage = _selectedPicturePage;
+    };
+    this.getPicturePages = function() {
+        return picturePages;
+    };
+    this.setPicturePages = function( _picturePages ) {
+        picturePages = _picturePages;
+    };
     this.getTable = function () {
         return galleryTable;
     };
@@ -281,12 +295,46 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         this.setSelectedGallery(gallery);
         this.setTable(table);
         this.setGallerySize($.assocArraySize(data[gallery]));
+        this.setSelectedPicturePage(1);
+        this.setPicturePages(Math.ceil(this.getGallerySize() / this.options.maxPicturesPerScreen));
+        
+        
+        this.fillPicturePageChooser();
+        
         $('#'+Gallery.getGalleryContainer()).trigger('tableloaded');
+        
+    };
+    this.fillPicturePageChooser = function () {
+        var container = $('#picturePageChooser');
+        container.empty();
+        if (this.getPicturePages() > 1) {
+            var table = document.createElement('table');
+            var tr = document.createElement('tr');
+            table.appendChild(tr);
+            
+            previous = document.createElement('td');
+            previous.innerHTML = "previous";
+            $(previous).on('click', function(){
+                Gallery.showPreviousPictures();
+            });
+            
+            next = document.createElement('td');
+            next.innerHTML = "next";
+            $(next).on('click', function() {
+                Gallery.showNextPictures()
+            });
+            
+            $(tr).append(previous);
+            $(tr).append(next);
+            container.append(table);
+        };
+        
         
     };
     this.fillGalleryChooser = function () {
         var data = this.getGalleryData();
         var ul = $(this.options.galleryChooser+" ul");
+        var lbl = document.createElement('img');
         
         for ( gallery in data ) {
             var index = Math.floor((Math.random()*2)+1); 
@@ -643,12 +691,16 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
             width : tD['width'],
             height : tD['height']
         });
+        
+        //Set Title
+        $('#galleryHeader h1').html('Galerie - '+Gallery.getSelectedGallery());
     };
     this.changeGallery = function ( _gallery ) {
         if ( _gallery === this.getSelectedGallery()) {
             return;
         }
         this.fillTemplate(_gallery);
+        $('#galleryHeader h1').html('Galerie - '+Gallery.getSelectedGallery());
     };
     this.firstPicturePage = function () {
         

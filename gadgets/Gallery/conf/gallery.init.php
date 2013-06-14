@@ -1,7 +1,9 @@
 <?php
     
     require_once 'conf/gallery.conf.php';
+    require_once 'gadgets/DynamicTable/conf/dynamicTable.init.php';
     require_once 'gadgets/DynamicTable/classes/dynamicTable.class.php';
+    
     
     // DATENBANK KREIEREN:
     

@@ -14,16 +14,16 @@
     define('PREFIX', 'tmpl_');
     
     $init = array(
-        PREFIX.'columns'=>7,              //Anzahl der Spalten der Tabelle
-        PREFIX.'width'=>60,               //Breite eines Templates
-        PREFIX.'height'=>60,              //Höhe eines Templates
-        PREFIX.'picSize'=>60,             //Größe des Bildes (quadratisch)
+        PREFIX.'columns'=>6,              //Anzahl der Spalten der Tabelle
+        PREFIX.'width'=>80,               //Breite eines Templates
+        PREFIX.'height'=>80,              //Höhe eines Templates
+        PREFIX.'picSize'=>80,             //Größe des Bildes (quadratisch)
         PREFIX.'picOpenSize'=>150,        //Größe des Bildes (quadratisch)
         PREFIX.'picOpacity'=>1,           //Opacity des Bildes
         PREFIX.'picPosition'=>'center',   //(left|center|right)
-        PREFIX.'padding'=>3,              //Padding
-        PREFIX.'rowHeight'=>80,           //Reihenhöhe 
-        PREFIX.'columnWidth'=>80,         //Spaltenbreite
+        PREFIX.'padding'=>2,              //Padding (muss zusätzlich in der css geändert werden)
+        PREFIX.'rowHeight'=>100,          //Reihenhöhe 
+        PREFIX.'columnWidth'=>95,        //Spaltenbreite
         PREFIX.'popUpHeight'=>150,        //Höhe des PopUp - Fensters
         PREFIX.'popUpWidth'=>150,         //Breite des PopUp - Fensters
         PREFIX.'popUpFactorImg'=>3,       //Faktor um den das Bild (Cover) verkleinert wird beim popUp (1/Faktor)

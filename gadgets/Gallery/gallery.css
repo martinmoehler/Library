@@ -20,21 +20,19 @@ body {
     position: relative;
     margin: 0;
     padding: 0;
+    padding-top: 40px;
     width: 100%;
     height: 100%;
     background-color: lightgray;
     font-family: "Arial";
     font-size: 12pt;
 }
-.galleryHeader h1, .galleryHeader hr {
+#galleryHeader h1 {
     color: white;
     text-shadow: gray 1px 1px 2px;
-    font-size: 12pt;
-}
-
-.galleryHeader hr {
-    color: gray;
-    height: 3px;
+    font-size: 15pt;
+    margin-left: 40px;
+    margin-top: 30px;
 }
 
 #galleryMainContainer {
@@ -42,48 +40,56 @@ body {
     
     height: 400px;
     width: 700px;
+    border-radius: 5px;
+    border-bottom-right-radius: 20px;
+    border: 2px outset rgb(70,70,70);
     
-    border-radius: 10px;
-    border-bottom-right-radius: 0px;
-    border: 3px ridge rgb(70,70,70);
-    
-    
+    overflow: hidden;
     background: rgb(70,70,70) url(gfx/noise.png) repeat;
 }
 
 #galleryContainer {
     position: relative;
     overflow: hidden;
-    padding: 20px;
     height: 100%;
 }
 
 #galleryChooserContainer {
     position: absolute;
     
-    left: -130px;
-    top:20%;
+    right: -130px;
+    top: 10%;
     
-    height: 70%;
+    height: 90%;
     width: 150px;
     
-    background-color: rgb(220,220,220);
+    background-color: rgb(160,160,160);
     
-    border: 2px ridge rgba(70,70,70,.8);
-    border-left: none;
-    border-radius: 5px;
-    border-bottom-left-radius: 0px;
-    border-top-left-radius: 0px;
-    
+    border-left: 2px outset rgba(70,70,70,.8);
+    border-top: 2px outset rgba(70,70,70,.8);
+    border-top-left-radius: 20px;
     z-index: 2;
     
-} ul {
+    overflow: auto;
+}
+#galleryChooserContainer ul {
     list-style: none;
-    margin-left: -25px;
-} li {
+    margin-left: -15px;
+} 
+#galleryChooserContainer li {
     margin-bottom: 10px;
     color: white;
     text-shadow: black 1px 1px 2px;
+}
+
+#galleryChooser_lbl {
+    width: 20px;
+    height: 100%;
+    position: absolute;
+} 
+#galleryChooser_lbl img {
+    position: absolute;
+    top: 30%;
 }
 
 #galleryChooserContainer ul li:hover {
@@ -93,11 +99,13 @@ body {
 #pictureBox {
     position: absolute;
     
+    background-position: bottom right;
     padding: 10px;
     
-    width: 90%;
+    width: 85%;
     left: 5%;
-    top: 20%;
+    top: 30%;
+    height: 50%;
 }
 
 #pictureContainer {
@@ -134,4 +142,23 @@ body {
     margin: auto;
     width: 25px;
     height: 40px;
+}
+
+#picturePageChooser {
+    color: white;
+    text-shadow: gray 1px 1px 2px;
+    
+    position: absolute;
+    
+    bottom: 10%;
+    right: 20%;
+}
+
+#picturePageChooser td{
+    padding: 5px;
+}
+
+#picturePageChooser td:hover{
+    color: rgb(210,210,210);
+    cursor: pointer;
 }

@@ -1,9 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/xhtml2/DTD/xhtml1-strict.dtd">
 
 <?php
-
-require_once 'conf/gallery.init.php';
-require_once 'gadgets/DynamicTable/conf/dynamicTable.init.php';
+    require_once 'conf/gallery.init.php';
 ?>
 
 
