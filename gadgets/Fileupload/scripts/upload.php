@@ -40,7 +40,7 @@
         $subfolder = null;
         $filename = null;
         $thmbname = null;
-        
+        var_dump($tableData);
         foreach($tableData[$i] as $JSfield => $value) {
             if (key_exists($JSfield, $represents)) {
                 switch ($represents[$JSfield]) {
@@ -69,10 +69,8 @@
         }
         
         if ( $filename ) {
-            /**
-             * @todo $filename überprüfen!
-             */
-        } 
+            
+        }
         
         if (!$filename ) {
             $filename = basename($file['name']);
@@ -89,10 +87,22 @@
         // Create Thumbail if wished.
             if ($thmbname) {
                 $thmbdir = $uploaddir;
-                require_once 'mkthmb.php';
+                
+                error_reporting(E_ALL);
+                include_once("../classes/Picture.class.php");
+                $thumbnail = new thumbnail();
+                $thumbnail->create($uploadfile);
+                $thumbnail->setQuality(90);
+                $thumbnail->resize(200);
+                $thumbnail->cube(200);
+                $thumbnail->save($thmbdir.$thmbname);
+                /*
+                 * require_once 'mkthmb.php';
                 if(!mkthumb($filename, 200, 200, $uploaddir, $thmbdir)) {
                     die("Error occured while creating the thumbnail.");
                 };
+                 * 
+                 */
             }
             
         // Write data in the DB!!

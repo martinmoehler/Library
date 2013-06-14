@@ -9,10 +9,9 @@
         $img_height = "400",        // max. Größe in y-Richtung
         $folder_scr = "pictures",   // Ordner der normalen Bilder
         $des_src    = "thumbs",     // Ordner der Thumbs
-        $thmb_type = ".png")        // MimeType des Thumbs          
+        $thmb_type = ".png",        // MimeType des Thumbs          
+        $img_square = true )        // Bild auf Quadratische Form zuschneiden
     {
-        
-
         
         // Größe und Typ ermitteln
         list($src_width, $src_height, $src_typ) = getimagesize($folder_scr."/".$img_src);
@@ -36,7 +35,20 @@
         {
             $image = imagecreatefromgif($folder_scr."/".$img_src);
             $new_image = imagecreate($new_image_width, $new_image_height);
-            imagecopyresampled($new_image, $image, 0, 0, 0, 0, $new_image_width,$new_image_height, $src_width, $src_height);
+            
+            imagecopyresampled(
+                $new_image, 
+                $image, 
+                0, 
+                0, 
+                $src_width - $new_image_width, 
+                $src_height - $new_image_height, 
+                $new_image_width,
+                $new_image_height, 
+                $src_width, 
+                $src_height
+            );
+            
             switch ($thmb_type) {
                 case '.png' :
                     imagepng($new_image, $des_src."/".$thmb_name);
@@ -59,7 +71,11 @@
         {
             $image = imagecreatefromjpeg($folder_scr."/".$img_src);
             $new_image = imagecreatetruecolor($new_image_width, $new_image_height);
-            imagecopyresampled($new_image, $image, 0, 0, 0, 0, $new_image_width,$new_image_height, $src_width, $src_height);
+            
+            imagecopyresampled(
+                $new_image,$image, 0, 0, 0, 0, $new_image_width, $new_image_height, $src_width, $src_height
+            );
+            
             switch ($thmb_type) {
                 case '.png' :
                     imagepng($new_image, $des_src."/".$thmb_name);
@@ -82,7 +98,12 @@
         {
             $image = imagecreatefrompng($folder_scr."/".$img_src);
             $new_image = imagecreatetruecolor($new_image_width, $new_image_height);
-            imagecopyresampled($new_image, $image, 0, 0, 0, 0, $new_image_width,$new_image_height, $src_width, $src_height);
+            
+            imagecopyresampled(
+                $new_image,$image, 0, 0, 0, 0, $new_image_width, $new_image_height, $src_width, $src_height
+            );
+            
+            
             switch ($thmb_type) {
                 case '.png' :
                     imagepng($new_image, $des_src."/".$thmb_name);
