@@ -19,12 +19,13 @@ function Template(containerID, _init){
     this.closeTop = this.position.top;
     this.closeLeft = this.position.left;
     this.closeZIndex = 1;
-
+    
     this.fade = "";
     this.picClose = init['tmpl_picSize'];   //init['tmpl_picSize'];
     this.picOpen = init['tmpl_picOpenSize'];    //init['tmpl_picSize'] / init['tmpl_popUpFactorImg'];
     this.picOpacity = init['tmpl_picOpacity'];
-    this.picPosition = init['tmpl_picPosition'];             
+    this.picPosition = init['tmpl_picPosition'];
+    this.padding = init['tmpl_padding'];
 
     this.titleHeight = 80;                 //this.picOpen
 
@@ -50,7 +51,7 @@ function Template(containerID, _init){
         switch (this.picPosition) {
             case 'left' :
                 $('img', this.container).animate({
-                    left: 5,
+                    left: this.padding,
                     width: this.picOpen,
                     height: this.picOpen,
                     opacity: this.picOpacity
@@ -59,8 +60,8 @@ function Template(containerID, _init){
                 break;
             case 'center' :
                 $('img', this.container).animate({
-                    left: (this.openWidth - this.picOpen) / 2 + 5,
-                    top: (this.openHeight - this.picOpen) / 2 + 5,
+                    left: (this.openWidth - this.picOpen) / 2 + this.padding,
+                    top: (this.openHeight - this.picOpen) / 2 + this.padding,
                     width: this.picOpen,
                     height: this.picOpen,
                     opacity: this.picOpacity
@@ -69,7 +70,7 @@ function Template(containerID, _init){
                 break;
             case 'right' :
                 $('img', this.container).animate({
-                    right: 5,
+                    right: this.padding,
                     width: this.picOpen,
                     height: this.picOpen,
                     opacity: this.picOpacity
@@ -107,8 +108,8 @@ function Template(containerID, _init){
         }, init['tmpl_animationTime']);
 
         $('img', this.container).animate({
-            left: 5,
-            top: 5,
+            left: this.padding,
+            top: this.padding,
             width: this.picClose,
             height: this.picClose,
             opacity: 1

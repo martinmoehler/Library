@@ -63,10 +63,10 @@
         'pictureContainer' => '#pictureContainer',
         
         //Options to define the behaviour of the Gallery
-        'maxPicturesPerScreen' => 12,               //Defines how many pictures are shown per once
+        'maxPicturesPerScreen' => 21,               //Defines how many pictures are shown per once
         'dynamicallyChangeGallerySize' => false,    //Intern usage, better dont'change
-        'maxPictureSize' => 500,                    //(in px) or height ow width
-        'showPictureChangers' => false              //gray divs in the picture viewer (mouseovereffect)
+        'maxPictureSize' => 600,                    //(in px) or height ow width
+        'showPictureChangers' => true               //gray divs in the picture viewer (mouseovereffect)
         
     );
     

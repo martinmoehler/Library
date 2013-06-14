@@ -46,6 +46,8 @@
 
         if($result = $mysqli->query("SELECT * FROM `".DB_TABLE_GALLERY."`")){
             while ($row = $result->fetch_assoc()) {
+                $row['thmbImg'] = GALLERY_PATH . $row['gallery'] . "/" . $row['thmbImg'];
+                $row['fullImg'] = GALLERY_PATH . $row['gallery'] . "/" . $row['fullImg'];
                 $galleryData[$row['gallery']][] = $row;
             }
         } else {

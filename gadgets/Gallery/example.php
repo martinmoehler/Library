@@ -30,14 +30,15 @@ require_once 'gadgets/DynamicTable/conf/dynamicTable.init.php';
             var galleryData = null; 
             var galleryOptions = null;
             var galleryContainer = null;                            
-
+            
             var Gallery = null;
-
+            
+            galleryData = <?= json_encode($galleryData)?>;
+            
             $(document).ready(function(){
                 
             
-                init = <?php echo json_encode($init) ?>;                        //configuration of dynamicTable                
-                galleryData = null;                                             //!IMPORTANT
+                init = <?php echo json_encode($init) ?>;                        //configuration of dynamicTable       
                 galleryOptions = <?php echo json_encode($galleryOptions) ?>;    //!IMPORTANT
                 galleryContainer = null;                                        //if null, a new Container will be placed in the body;
                 
@@ -54,9 +55,5 @@ require_once 'gadgets/DynamicTable/conf/dynamicTable.init.php';
     </head>
     
     <body>
-        <?php
-            include 'templates/rawHtml.tpl.php';
-        ?>
-        
     </body>
 </html>

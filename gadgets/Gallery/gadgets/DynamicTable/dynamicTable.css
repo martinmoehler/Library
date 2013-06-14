@@ -49,16 +49,16 @@ body {
     position: absolute;
     
     border: 1px solid lightgray;
-    -moz-border-radius: 9px;
-    border-radius: 9px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
     
-    background-color: rgba(210,210,210,.8);
-    /*background-color: rgba(240,240,240,1);*/
+    /*background-color: rgba(210,210,210,.8);*/
+    background-color: rgba(240,240,240,1);
     
-    padding: 5px;
+    padding: 3px;
     
     font-size: 10pt;
-    
+    cursor: pointer;
 }
 
 .tmpl_infos .tmpl_table_box {

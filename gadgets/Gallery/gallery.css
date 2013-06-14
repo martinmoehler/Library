@@ -10,7 +10,6 @@ root {
     display: block;
     
 }
-
 html {
     margin: 0;
     padding: 0;
@@ -35,7 +34,6 @@ body {
 
 .galleryHeader hr {
     color: gray;
-    text-shadow: black 1px 1px 2px;
     height: 3px;
 }
 
@@ -44,10 +42,13 @@ body {
     
     height: 400px;
     width: 700px;
+    
     border-radius: 10px;
     border-bottom-right-radius: 0px;
     border: 3px ridge rgb(70,70,70);
-    background-color: rgb(230,230,230);
+    
+    
+    background: rgb(70,70,70) url(gfx/noise.png) repeat;
 }
 
 #galleryContainer {
@@ -63,9 +64,8 @@ body {
     left: -130px;
     top:20%;
     
-    height: 60%;
+    height: 70%;
     width: 150px;
-    
     
     background-color: rgb(220,220,220);
     
@@ -93,9 +93,11 @@ body {
 #pictureBox {
     position: absolute;
     
+    padding: 10px;
+    
     width: 90%;
     left: 5%;
-    bottom: 40px;
+    top: 20%;
 }
 
 #pictureContainer {
