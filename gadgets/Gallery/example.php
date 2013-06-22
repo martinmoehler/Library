@@ -18,11 +18,15 @@
         <link href="gadgets/DynamicTable/dynamicTable.css" rel="stylesheet" type="text/css">
         <script src="scripts/jquery.js" type="text/javascript"></script>
         
+        
+        <script src="classes/ClassLibrary.js" type="text/javascript"></script>
+        <script src="scripts/models.js" type="text/javascript"></script>
         <script src="classes/gallery.class.js" type="text/javascript"></script>
         <script src="gadgets/DynamicTable/classes/dynamicTable.class.js" type="text/javascript"></script>
         
         <script type="text/javascript">
-            
+
+
             var init = null;
             var table = null;
             var galleryData = null; 
@@ -41,11 +45,20 @@
                 galleryContainer = null;                                        //if null, a new Container will be placed in the body;
                 
                 Gallery = new classGallery ( galleryOptions, galleryData, galleryContainer, init );
-
-                
-                
-                
             });
+            
+            WebFontConfig = {
+               google: { families: [ 'Fauna+One::latin', 'Alef::latin' ] }
+             };
+             (function() {
+               var wf = document.createElement('script');
+               wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+                 '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+               wf.type = 'text/javascript';
+               wf.async = 'true';
+               var s = document.getElementsByTagName('script')[0];
+               s.parentNode.insertBefore(wf, s);
+             })();
         </script>
         
             

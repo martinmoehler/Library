@@ -63,11 +63,14 @@
         'pictureContainer' => '#pictureContainer',
         
         //Options to define the behaviour of the Gallery
+        'language' => 'de',                         //(de|en) 
         'maxPicturesPerScreen' => 12,               //Defines how many pictures are shown per once
         'dynamicallyChangeGallerySize' => false,    //Intern usage, better dont'change
         'maxPictureSize' => 600,                    //(in px) or height ow width
-        'showPictureChangers' => true               //gray divs in the picture viewer (mouseovereffect)
-        
+        'showPictureChangers' => true,              //gray divs in the picture viewer (mouseovereffect)
+        'galleryChooserRows' => 2,                  //Defines in how many rows the list will be organized
+        'galleryChooserPreviewSize' => 'big',       //Previewpicture size (small|medium|big)
+        'galleryChooserFirstState' => 'closed'      //Defines the status of GalleryChooser for the afterloaded event
     );
     
 ?>

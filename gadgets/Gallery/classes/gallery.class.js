@@ -1,5 +1,4 @@
 
-
 function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTableInit ) {
     
 //--- Fields ---/    
@@ -25,7 +24,8 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
     var galleryData = new Array();
     var tableData = {};
     var galleryContainer = null;
-    var gallerySize = null;             //Anzahl von Bildern in der Galerie
+    var gallerySize = null;             //Anzahl von Bildern in der ausgewählten Galerie
+    var galleriesSize = null;           //Anzahl von Galerien
     var selectedGallery = null;
     var selectedPicture = null;
     var galleryTable = null;
@@ -130,6 +130,13 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
     this.setGallerySize = function ( _size ) {
         gallerySize = _size;
     };
+    this.getGalleriesSize = function () {
+        return galleriesSize;
+    };
+    this.setGalleriesSize = function ( _galleriesSize ) {
+        galleriesSize = _galleriesSize;
+    };
+    
 
 //--- Methods ---//
     this.configureGalleryData = function ( _galleryData ) {
@@ -139,7 +146,7 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
                 var fileName = _galleryData[gallery][index].fullImg
                     .replace(/\\/g,'/')
                     .split('/');
-                fileName = fileName[fileName.length -1].substr(0, fileName[fileName.length -1].indexOf("."));
+                fileName = fileName[fileName.length -1].substr(0, fileName[fileName.length -1].lastIndexOf("."));
 
                 _galleryData[gallery][index].fileName = fileName;
             }
@@ -261,7 +268,7 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
                 var fileName = data[gallery][i].fullImg
                         .replace(/\\/g,'/')
                         .split('/');
-                fileName = fileName[fileName.length -1].substr(0, fileName[fileName.length -1].indexOf("."));
+                fileName = fileName[fileName.length -1].substr(0, fileName[fileName.length -1].lastIndexOf("."));
 
                 table[fileName] = data[gallery][i];
                 pictureContainer.append(data[gallery][i]['templateHTML']);
@@ -335,44 +342,83 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         var data = this.getGalleryData();
         var ul = $(this.options.galleryChooser+" ul");
         var lbl = document.createElement('img');
+        var container = $(this.options.galleryChooser);
+        var View;
+        
+        //Update the Model with the correct values
+        galleryChooser.CSS.paddingLeft = container.css('paddingLeft');
+        galleryChooser.CSS.paddingRight = container.css('paddingRight');
+        galleryChooser.CSS.paddingTop = container.css('paddingTop');
+        galleryChooser.CSS.paddingBottom = container.css('paddingBottom');
+        galleryChooser.CSS.closedWidth = container.width();
+        
+        switch (this.options.galleryChooserPreviewSize) {
+            case 'small' :
+                View = galleryChooser.Preview.Small;
+                break;
+            case 'medium' :
+                View = galleryChooser.Preview.Medium;
+                break;
+            case 'big' :
+                View = galleryChooser.Preview.Big;
+                break;
+            default :
+                View = galleryChooser.Preview.Medium;
+                break;
+        }
+        
+        var row = 0, column = 0;
         
         for ( gallery in data ) {
-            var index = Math.floor((Math.random()*2)+1); 
+            
+            var picIndex = Math.floor((Math.random()*2)+1); 
             var li = document.createElement('li');
             var galleryImg = document.createElement('img');
             var firstImg = document.createElement('img');
             var title = document.createElement('div');
+            var rows = this.options.galleryChooserRows;
             
-            galleryImg.src = "gfx/gallery" + index + ".png";
+            row++;
+            if (row > rows) {
+                row -= rows;
+                column++;
+            }
+            
+            galleryImg.width = View.imgWidth;
+            galleryImg.src = "gfx/gallery" + picIndex + ".png";
             galleryImg.style.zIndex = 5;
             galleryImg.className = "galleryChooserBackLi";
             
             firstImg.src = this.getPicturePath(0, gallery, "thmb");
             firstImg.style.zIndex = 6;
-            firstImg.style.width = "70px";
+            firstImg.style.width = View.firstImgWidth;
             firstImg.style.position = "absolute";
-            firstImg.style.top = "15px";
-            firstImg.style.left = "20px";
+            firstImg.style.top = View.firstImgTop;
+            firstImg.style.left = View.firstImgLeft;
             
             title.innerHTML = gallery;
             title.className = "galleryChooserTitle";
-            title.style.width = "70px";
+            title.style.width = View.titleWidth;
             title.style.position = "absolute";
-            title.style.bottom = "35px";
-            title.style.left = "20px";
+            title.style.bottom = View.titleBottom;
+            title.style.left = View.titleLeft;
             title.style.zIndex = 7;
-            title.style.backgroundColor = 'rgba(210,210,210,.6)';
+            title.style.backgroundColor = View.titleBackColor;
             title.style.padding = '2px';
+            title.style.textAlign = 'center';
             
             li.title = gallery;
-            li.style.height = "120px";
-            li.style.width = "110px";
-            li.style.position = "relative";
+            li.style.height = View.liHeight;
+            li.style.width = View.liWidth;
+            li.style.top = $.toggleCssMath((row-1) * $.toggleCssMath(View.liHeight));
+            li.style.left = $.toggleCssMath(column * $.toggleCssMath(View.liWidth));
+            li.style.position = "absolute";
             li.className = "galleryChooserElement";
             
             li.appendChild(galleryImg);
             li.appendChild(firstImg);
             li.appendChild(title);
+            
             ul.append(li);
             
             $(ul).delegate('li','click', function (evt) {
@@ -397,6 +443,52 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
                 target = evt.currentTarget;
             });
         }
+        
+        //Update the Model with the correct values
+        galleryChooser.CSS.openedWidth = $.toggleCssMath(container.width());        
+        galleryChooser.CSS.closedRight = $.toggleCssMath(-(Math.abs($.toggleCssMath(galleryChooser.CSS.openedWidth) - galleryChooser.CSS.closedWidth)));
+        
+        
+        //Set the width of the Container to the fitting value
+        $(this.options.galleryChooser).css({
+            right: (function(){
+                switch(Gallery.options.galleryChooserFirstState) {
+                    case 'opened' :
+                        return "0px";
+                        break;
+                    default :
+                        return galleryChooser.CSS.closedRight;
+                        break;
+                };
+            })(),
+            width: (function(){
+                
+                return $.toggleCssMath((column + 1) * $.toggleCssMath(View.liWidth) + 2 * 20);
+            })(),
+            backgroundColor : (function(){
+                switch(Gallery.options.galleryChooserFirstState) {
+                    case 'opened' :
+                        return 'rgba(70,250,70,.6)';
+                        break;
+                    default :
+                        return "rgb(160,160,160)";
+                        break;
+                };
+            })()
+        });
+        
+        //Set the ul in the vertical center of the Container
+        ul.css({
+            position: 'absolute',
+            left: '35px',
+            top: (function(){
+                var height = $(Gallery.options.galleryChooser).height();
+                return $.toggleCssMath((height - rows * $.toggleCssMath(View.liHeight)) / 2);
+            })()
+        });
+        
+        
+        
         this.setGalleryChooserFilled(true);
     };
     this.changePictureContainerSize = function ( _gallery ) {
@@ -566,6 +658,7 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         });
         next.on('mouseenter', function() {
             if (Gallery.options.showPictureChangers) {
+                next.stop(true);
                 next.animate({
                     opacity: 1
                 });
@@ -573,6 +666,7 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         });
         next.on('mouseleave', function() {
             if (Gallery.options.showPictureChangers) {
+                next.stop(true);
                 next.animate({
                     opacity: 0
                 });
@@ -602,6 +696,7 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         });
         previous.on('mouseenter', function() {
             if (Gallery.options.showPictureChangers) {
+                previous.stop(true);
                 previous.animate({
                     opacity: 1
                 });
@@ -610,7 +705,46 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         });
         previous.on('mouseleave', function() {
             if (Gallery.options.showPictureChangers) {
+                previous.stop(true);
                 previous.animate({
+                    opacity: 0
+                });
+            }
+        });
+        
+        var info = $(document.createElement('div'));
+        info.attr({
+            'id' : 'info'
+        });
+        
+        info.css({
+            cursor : 'pointer',
+            position: 'absolute',
+            left: '20%',
+            top: '0px',
+            width: '60%',
+            height: '100%',
+            opacity: 0,
+            background: 'url(gfx/info_gray40.png) 50% 50% no-repeat' ,
+            zIndex: 10
+        });
+        info.on('click', function() {
+            $('#'+Gallery.getGalleryContainer()).trigger('pictureviewerinfo');
+            return false;
+        });
+        info.on('mouseenter', function() {
+            if (Gallery.options.showPictureChangers) {
+                info.stop(true);
+                info.animate({
+                    opacity: 1
+                });
+            }
+            
+        });
+        info.on('mouseleave', function() {
+            if (Gallery.options.showPictureChangers) {
+                info.stop(true);
+                info.animate({
                     opacity: 0
                 });
             }
@@ -618,7 +752,8 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         
         viewer
             .append(next)
-            .append(previous);
+            .append(previous)
+            .append(info);
             
         return viewer;
     };
@@ -658,7 +793,9 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         var selectedPicture = $('#selectedPicture');
         selectedPicture.fadeOut(100, function(){
             selectedPicture.attr('src', newPicture);
-            selectedPicture.fadeIn(100);
+            selectedPicture.on('load', function() {
+                selectedPicture.fadeIn(100)
+            });
         });
         
         this.setSelectedPicture(newPicture);
@@ -672,12 +809,73 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         var selectedPicture = $('#selectedPicture');
         selectedPicture.fadeOut(50, function(){
             selectedPicture.attr('src', newPicture);
-            selectedPicture.fadeIn(50);
+            selectedPicture.on('load', function() {
+                selectedPicture.fadeIn(100)
+            });
         });
         
         this.setSelectedPicture(newPicture);
     };
-    
+    this.showInfoBox = function () {
+        var infoBox = $(document.createElement('div'));
+        var pictureData = (function(){
+            var helper = Gallery.getGalleryData()
+            return helper[Gallery.getSelectedGallery()][Gallery.getPictureIndex(Gallery.getSelectedPicture())];
+        })();
+        
+        for (var data in pictureData) {
+            if (!galleryChooser.InfoBox.Show[data]) delete pictureData[data];
+        }
+        
+        var table = $(document.createElement('table'));
+        var Lang = null;
+        switch (Gallery.options.language) {
+            case 'de' :
+                Lang = galleryChooser.InfoBox.Lang.DE;
+                break;
+            case 'en' :
+                Lang = galleryChooser.InfoBox.Lang.EN;
+                break;
+            default :
+                Lang = galleryChooser.InfoBox.Lang.DE;
+                break;
+        }
+        var index;
+        for (data in pictureData) {
+            
+            var tr = $(document.createElement('tr'));
+            var key = $(document.createElement('td'));
+            var value = $(document.createElement('td'));
+            
+            index++;
+            
+            if ((index % 2) > 0) {
+                tr.css('backgroundColor', 'rgb(210,210,210)');
+            } else {
+                tr.css('backgroundColor', 'rgb(170,170,170)');
+            }
+            
+            key.html(Lang[data]);
+            value.html(pictureData[data]);
+            
+            tr
+                .append(key)
+                .append(value);
+                
+            table.append(tr);
+        }
+        
+        
+        infoBox.append(table);
+        
+        infoBox.css({
+            top : '30%',
+            left : -((infoBox).width() + 20)
+        });
+        
+        $('#pictureViewer').append(infoBox);
+    };
+
 //--- EventHandlers ---//
     this.templatesLoaded = function() {
         console.log('templateLoad');
@@ -693,14 +891,14 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         });
         
         //Set Title
-        $('#galleryHeader h1').html('Galerie - '+Gallery.getSelectedGallery());
+        $('#galleryHeader h1').html(Gallery.getSelectedGallery());
     };
     this.changeGallery = function ( _gallery ) {
         if ( _gallery === this.getSelectedGallery()) {
             return;
         }
         this.fillTemplate(_gallery);
-        $('#galleryHeader h1').html('Galerie - '+Gallery.getSelectedGallery());
+        $('#galleryHeader h1').html(Gallery.getSelectedGallery());
     };
     this.firstPicturePage = function () {
         
@@ -753,6 +951,9 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         mainContainer.on('pictureviewerprevious', function () {
             Gallery.showPreviousPicture();
         });
+        mainContainer.on('pictureviewerinfo', function(){
+            Gallery.showInfoBox();
+        });
         //--- DefaultOptions ---//
         _options !== null ? this.options = _options : this.options = this.defaultOptions;
         _galleryData !== null ? this.setGalleryData(this.configureGalleryData(_galleryData)) : this.setGalleryData(this.configureGalleryData(this.readFromHTMLStructure()));
@@ -764,6 +965,12 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         for (var firstGallery in this.getGalleryData()) {
             break;
         }
+        var size;
+        for (var gallery in this.getGalleryData()) {
+            size++;
+        };
+        this.setGalleriesSize(size);
+        
         this.getDynamicTableTemplates();
         
         

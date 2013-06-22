@@ -31,3 +31,13 @@
         tempImg.attr('src', path);
         $('#tempImg').remove(); //remove from DOM
     };
+    
+    $.toggleCssMath = function(string) {
+        string += "";
+        if (string.indexOf('px') > 0) {
+            string=string.replace("px", '');
+        } else {
+            string += "px";
+        }
+        return string;
+    };

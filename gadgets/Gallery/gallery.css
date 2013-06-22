@@ -27,6 +27,36 @@ body {
     font-family: "Arial";
     font-size: 12pt;
 }
+
+#galleryHeader {
+    background: rgb(70,70,70) url(gfx/noise.png) repeat;
+    position: absolute;
+    
+    top: 0px;
+    left: 0px;
+    
+    height: 20%;
+    width: 100%;
+    
+}
+
+#pictureBox {
+    background: rgb(70,70,70) url(gfx/noise.png) repeat;
+    position: absolute;
+    
+    padding: 10px;
+    
+    top: 20%;
+    left: 0px;
+    
+    height: 60%;
+    width: 100% - 20px;
+    
+    margin-top: 10px;
+}
+
+
+
 #galleryHeader h1 {
     color: white;
     text-shadow: gray 1px 1px 2px;
@@ -40,12 +70,15 @@ body {
     
     height: 400px;
     width: 700px;
-    border-radius: 5px;
+    /*
     border-bottom-right-radius: 20px;
-    border: 2px outset rgb(70,70,70);
-    
-    overflow: hidden;
+    border: 1px solid rgb(30,30,30);
     background: rgb(70,70,70) url(gfx/noise.png) repeat;
+    */
+    overflow: hidden;
+    
+    
+    font-family: 'Alef', sans-serif;
 }
 
 #galleryContainer {
@@ -58,16 +91,23 @@ body {
     position: absolute;
     
     right: -130px;
-    top: 10%;
+    top: 20%;
     
-    height: 90%;
-    width: 150px;
+    height: 80%;
+    width: 10%;
+    
+    margin-top: 10px;
+    margin-left: 10px;
+    
+    max-width: 90%;
     
     background-color: rgb(160,160,160);
     
-    border-left: 2px outset rgba(70,70,70,.8);
-    border-top: 2px outset rgba(70,70,70,.8);
+    
+    /*
+    border: 2px outset rgba(70,70,70,.8);
     border-top-left-radius: 20px;
+    */
     z-index: 2;
     
     overflow: auto;
@@ -94,18 +134,6 @@ body {
 
 #galleryChooserContainer ul li:hover {
     cursor: pointer;
-}
-
-#pictureBox {
-    position: absolute;
-    
-    background-position: bottom right;
-    padding: 10px;
-    
-    width: 85%;
-    left: 5%;
-    top: 30%;
-    height: 50%;
 }
 
 #pictureContainer {
