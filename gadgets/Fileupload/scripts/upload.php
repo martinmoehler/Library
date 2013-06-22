@@ -40,7 +40,7 @@
         $subfolder = null;
         $filename = null;
         $thmbname = null;
-        var_dump($tableData);
+        
         foreach($tableData[$i] as $JSfield => $value) {
             if (key_exists($JSfield, $represents)) {
                 switch ($represents[$JSfield]) {
