@@ -11,6 +11,13 @@
             }, time);
         });
     };
+    
+    $.fn.top = function () {
+        return $.cutPX(this.css('top'));
+    };
+    $.fn.left = function () {
+        return $.cutPX(this.css('left'));
+    };
 
     $.assocArraySize = function(obj) {
         // http://stackoverflow.com/a/6700/11236
@@ -32,12 +39,22 @@
         $('#tempImg').remove(); //remove from DOM
     };
     
-    $.toggleCssMath = function(string) {
-        string += "";
-        if (string.indexOf('px') > 0) {
-            string=string.replace("px", '');
+    $.toggleCssMath = function(value) {
+        value += "";
+        if (value.indexOf('px') > 0) {
+            value=value.replace("px", '');
         } else {
-            string += "px";
+            value += "px";
         }
-        return string;
+        return value;
+    };
+
+    $.cutPX = function(string) {
+        string += "";
+        return parseInt(string.replace("px", ''));
+    };
+    
+    $.addPX = function(value) {
+        string = $.cutPX(value);
+        return $.toggleCssMath(string);
     };

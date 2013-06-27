@@ -29,8 +29,16 @@
         <div id="next"><img title="Next Pictures"src="gfx/right.png" width="25px" alt="Next Pictures" onclick="Gallery.showNextPictures();"></div>
         -->
     </div>
-    <div id="picturePageChooser">
+    <div id="footer">
+        <div id="picturePagePrevious">
         
+        </div>
+        <div id="picturePageLabel">
+            <span></span>
+        </div>
+        <div id="picturePageNext">
+        
+        </div>
     </div>
     <div class="spacer" style="clear: both;"></div>
 </div>

@@ -34,7 +34,7 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
     var galleryChooserFilled = false;
     var firstPictureIndex = null;
     var picturePages = null;            //Anzahl der Bilder-Seiten
-    var selectedPicturePage = null; 
+    var selectedPicturePage = 1; 
     
 //--- Getters and Settets ---//
     this.getSelectedPicturePage = function() {
@@ -258,6 +258,9 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         var pictureContainer = $(this.options.pictureContainer);
         var table = {};
         var firstIndex = this.getFirstPictureIndex();
+        var picturePage = this.getSelectedPicturePage();
+        
+        $('#picturePageLabel span').html('Page ' +picturePage + " of " + Gallery.getPicturePages());
         
         pictureContainer.empty();
         if (!this.isGalleryChooserFilled()) this.fillGalleryChooser();
@@ -302,39 +305,59 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         this.setSelectedGallery(gallery);
         this.setTable(table);
         this.setGallerySize($.assocArraySize(data[gallery]));
-        this.setSelectedPicturePage(1);
         this.setPicturePages(Math.ceil(this.getGallerySize() / this.options.maxPicturesPerScreen));
-        
-        
-        this.fillPicturePageChooser();
         
         $('#'+Gallery.getGalleryContainer()).trigger('tableloaded');
         
     };
     this.fillPicturePageChooser = function () {
-        var container = $('#picturePageChooser');
-        container.empty();
-        if (this.getPicturePages() > 1) {
-            var table = document.createElement('table');
-            var tr = document.createElement('tr');
-            table.appendChild(tr);
-            
-            previous = document.createElement('td');
-            previous.innerHTML = "previous";
-            $(previous).on('click', function(){
-                Gallery.showPreviousPictures();
-            });
-            
-            next = document.createElement('td');
-            next.innerHTML = "next";
-            $(next).on('click', function() {
-                Gallery.showNextPictures()
-            });
-            
-            $(tr).append(previous);
-            $(tr).append(next);
-            container.append(table);
-        };
+        var height = $('#footer').height();
+        var width = height;
+        var margin = $.cutPX($('#footer').css('marginTop'));
+        
+        $('#picturePageLabel span').html('Page ' + Gallery.getSelectedPicturePage() + " of " + Gallery.getPicturePages());
+       
+        $('#footer').css({
+            width: (function(){
+                return $.toggleCssMath($('#footer').width() - (3 * width + 3 * margin) - width);
+            })()
+        });
+
+        var previous = $('#picturePagePrevious');
+        previous.css({
+            display: 'block',
+            position: 'absolute',
+            width: width,
+            height: height,
+            right: $.toggleCssMath(-(margin + width)),
+            top: 0
+        });
+        $(previous).on('click', function(){
+            $('#'+Gallery.getGalleryContainer()).trigger('previousPicturePage');
+        });
+
+        var label = $('#picturePageLabel');
+        label.css({
+            position: 'absolute',
+            width: 2 * width,
+            height: height,
+            right: $.toggleCssMath(- 3*(margin + width) - width),
+            top: 0
+        });
+
+        var next = $('#picturePageNext');
+        next.css({
+            display: 'block',
+            position: 'absolute',
+            width: width,
+            height: height,
+            right: $.toggleCssMath(- 2*(margin + width)),
+            top: 0
+        });
+        $(next).on('click', function() {
+            $('#'+Gallery.getGalleryContainer()).trigger('nextPicturePage');
+        });
+
         
         
     };
@@ -346,24 +369,24 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         var View;
         
         //Update the Model with the correct values
-        galleryChooser.CSS.paddingLeft = container.css('paddingLeft');
-        galleryChooser.CSS.paddingRight = container.css('paddingRight');
-        galleryChooser.CSS.paddingTop = container.css('paddingTop');
-        galleryChooser.CSS.paddingBottom = container.css('paddingBottom');
-        galleryChooser.CSS.closedWidth = container.width();
+        Models.galleryChooser.CSS.paddingLeft = container.css('paddingLeft');
+        Models.galleryChooser.CSS.paddingRight = container.css('paddingRight');
+        Models.galleryChooser.CSS.paddingTop = container.css('paddingTop');
+        Models.galleryChooser.CSS.paddingBottom = container.css('paddingBottom');
+        Models.galleryChooser.CSS.closedWidth = container.width();
         
         switch (this.options.galleryChooserPreviewSize) {
             case 'small' :
-                View = galleryChooser.Preview.Small;
+                View = Models.galleryChooser.Preview.Small;
                 break;
             case 'medium' :
-                View = galleryChooser.Preview.Medium;
+                View = Models.galleryChooser.Preview.Medium;
                 break;
             case 'big' :
-                View = galleryChooser.Preview.Big;
+                View = Models.galleryChooser.Preview.Big;
                 break;
             default :
-                View = galleryChooser.Preview.Medium;
+                View = Models.galleryChooser.Preview.Medium;
                 break;
         }
         
@@ -444,23 +467,11 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
             });
         }
         
-        //Update the Model with the correct values
-        galleryChooser.CSS.openedWidth = $.toggleCssMath(container.width());        
-        galleryChooser.CSS.closedRight = $.toggleCssMath(-(Math.abs($.toggleCssMath(galleryChooser.CSS.openedWidth) - galleryChooser.CSS.closedWidth)));
+        
         
         
         //Set the width of the Container to the fitting value
         $(this.options.galleryChooser).css({
-            right: (function(){
-                switch(Gallery.options.galleryChooserFirstState) {
-                    case 'opened' :
-                        return "0px";
-                        break;
-                    default :
-                        return galleryChooser.CSS.closedRight;
-                        break;
-                };
-            })(),
             width: (function(){
                 
                 return $.toggleCssMath((column + 1) * $.toggleCssMath(View.liWidth) + 2 * 20);
@@ -477,6 +488,24 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
             })()
         });
         
+        //Update the Model with the correct values
+        Models.galleryChooser.CSS.openedWidth = $.toggleCssMath(container.width());        
+        Models.galleryChooser.CSS.closedRight = $.toggleCssMath(-(Math.abs($.toggleCssMath(Models.galleryChooser.CSS.openedWidth) - Models.galleryChooser.CSS.closedWidth)));
+        
+        //Set the right of the container to the fitting value
+        $(this.options.galleryChooser).css({
+            right: (function(){
+                switch(Gallery.options.galleryChooserFirstState) {
+                    case 'opened' :
+                        return "0px";
+                        break;
+                    default :
+                        return Models.galleryChooser.CSS.closedRight;
+                        break;
+                };
+            })()
+        });
+    
         //Set the ul in the vertical center of the Container
         ul.css({
             position: 'absolute',
@@ -527,8 +556,10 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         
         if (gallerySize > firstIndex + picturesPerScreen) {
             this.setFirstPictureIndex(firstIndex + picturesPerScreen);
+            this.setSelectedPicturePage(this.getSelectedPicturePage() + 1);
             this.fillTemplate(gallery);
         }
+        
     };
     this.showPreviousPictures = function () {
         var picturesPerScreen = this.options.maxPicturesPerScreen;
@@ -538,6 +569,7 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         
         if ((firstIndex - picturesPerScreen) >= 0) {
             this.setFirstPictureIndex(firstIndex - picturesPerScreen);
+            this.setSelectedPicturePage(this.getSelectedPicturePage() - 1);
             this.fillTemplate(gallery);
         }
     };
@@ -824,20 +856,20 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         })();
         
         for (var data in pictureData) {
-            if (!galleryChooser.InfoBox.Show[data]) delete pictureData[data];
+            if (!Models.pictureViewer.InfoBox.Show[data]) delete pictureData[data];
         }
         
         var table = $(document.createElement('table'));
         var Lang = null;
         switch (Gallery.options.language) {
             case 'de' :
-                Lang = galleryChooser.InfoBox.Lang.DE;
+                Lang = Models.pictureViewer.InfoBox.Lang.DE;
                 break;
             case 'en' :
-                Lang = galleryChooser.InfoBox.Lang.EN;
+                Lang = Models.pictureViewer.InfoBox.Lang.EN;
                 break;
             default :
-                Lang = galleryChooser.InfoBox.Lang.DE;
+                Lang = Models.pictureViewer.InfoBox.Lang.DE;
                 break;
         }
         var index;
@@ -875,6 +907,37 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         
         $('#pictureViewer').append(infoBox);
     };
+    this.fixPictureBoxCSS = function() {
+        var CSS = Model.create();
+        
+        var container = $('#pictureBox');
+        CSS.marginRight = container.css('marginRight');
+        var width = container.width();
+        var height = container.height();
+        container.css({
+            'width': $.toggleCssMath(width - $.cutPX(CSS.marginRight)),
+            'height' : $.toggleCssMath(height -  2 * $.cutPX( CSS.marginRight))
+        });
+    };
+    this.fixFooterCSS = function() {
+        var CSS = Model.create();
+        
+        var container = $('#footer');
+        CSS.marginRight = container.css('marginRight');
+        CSS.marginTop = container.css('marginTop');
+        CSS.marginLeft = container.css('marginLeft');
+        CSS.marginBottom = container.css('marginBottom');
+        var width = container.width();
+        var height = container.height();
+        var top = container.top();
+        var left = container.left();
+        container.css({
+            'width' : $.toggleCssMath(width - $.cutPX(CSS.marginRight)),
+            'height' : $.toggleCssMath(height - $.cutPX(CSS.marginBottom)),
+            'top' : $.toggleCssMath(top - $.cutPX(CSS.marginTop)),
+            'left' : $.toggleCssMath(left + $.cutPX(CSS.marginLeft))
+        });
+    };
 
 //--- EventHandlers ---//
     this.templatesLoaded = function() {
@@ -897,8 +960,12 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         if ( _gallery === this.getSelectedGallery()) {
             return;
         }
+        this.setSelectedPicturePage(1);
+        this.setFirstPictureIndex(0);
         this.fillTemplate(_gallery);
+        
         $('#galleryHeader h1').html(Gallery.getSelectedGallery());
+        $('#picturePageLabel span').html('Page ' + Gallery.getSelectedPicturePage() + " of " + Gallery.getPicturePages());
     };
     this.firstPicturePage = function () {
         
@@ -929,6 +996,9 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         });
         mainContainer.on('galleryprinted', function () {
             Gallery.galleryPrinted();
+            Gallery.fixPictureBoxCSS();
+            Gallery.fixFooterCSS();
+            Gallery.fillPicturePageChooser();
         });
         mainContainer.on('gallerychange', function (event, gallery) {
             Gallery.changeGallery(gallery);
@@ -954,6 +1024,14 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         mainContainer.on('pictureviewerinfo', function(){
             Gallery.showInfoBox();
         });
+        mainContainer.on('nextPicturePage', function() {
+            Gallery.showNextPictures();
+            
+        }); 
+        mainContainer.on('previousPicturePage', function() {
+            Gallery.showPreviousPictures();
+            
+        });
         //--- DefaultOptions ---//
         _options !== null ? this.options = _options : this.options = this.defaultOptions;
         _galleryData !== null ? this.setGalleryData(this.configureGalleryData(_galleryData)) : this.setGalleryData(this.configureGalleryData(this.readFromHTMLStructure()));
@@ -972,6 +1050,7 @@ function classGallery ( _options, _galleryData, _galleryContainer, _dynamicTable
         this.setGalleriesSize(size);
         
         this.getDynamicTableTemplates();
+        
         
         
     };

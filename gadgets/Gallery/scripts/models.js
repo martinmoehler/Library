@@ -2,12 +2,13 @@
 //--- Models ---//
 
 
-var galleryChooser;
+var Models
+Models = {};
 
-galleryChooser = {};
-galleryChooser.Preview = {};
+Models.galleryChooser = {};
 
-galleryChooser.Preview.Small = Small = Model.create();
+Models.galleryChooser.Preview = {};
+Models.galleryChooser.Preview.Small = Small = Model.create();
 Small.extend({
     imgWidth: "60",
     liHeight: "80px",
@@ -21,7 +22,7 @@ Small.extend({
     firstImgWidth: "40px"
 });
 
-galleryChooser.Preview.Medium = Medium = Model.create();
+Models.galleryChooser.Preview.Medium = Medium = Model.create();
 Medium.extend({
     imgWidth: "80",
     liHeight: "100px",
@@ -35,7 +36,7 @@ Medium.extend({
     firstImgWidth: "50px"
 });
 
-galleryChooser.Preview.Big = Big = Model.create();
+Models.galleryChooser.Preview.Big = Big = Model.create();
 Big.extend({
     imgWidth: "110",
     liHeight: "120px",
@@ -49,10 +50,26 @@ Big.extend({
     firstImgWidth: "70px"
 });
 
-galleryChooser.InfoBox = {};
-galleryChooser.InfoBox.Lang = {};
+Models.galleryChooser.CSS = CSS = Model.create();
+CSS.extend({
+    closedRight: -1, 
+    closedWidth: -1,
+    openedWidth: -1,
+    paddingTop: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
+    paddingBottom: 0,
+    openedBackGround : 'rgba(80,180,80,1)',
+    closedBackGround : 'rgba(160,160,160,1)'
+});
 
-galleryChooser.InfoBox.Show = Show = Model.create();
+
+
+Models.pictureViewer = {};
+Models.pictureViewer.InfoBox = {};
+Models.pictureViewer.InfoBox.Lang = {};
+
+Models.pictureViewer.InfoBox.Show = Show = Model.create();
 Show.extend({
     copyright: true,
     description: true,
@@ -67,7 +84,7 @@ Show.extend({
     title: true
 });
 
-galleryChooser.InfoBox.Lang.DE = DE = Model.create();
+Models.pictureViewer.InfoBox.Lang.DE = DE = Model.create();
 DE.extend({
     copyright: "Copyright",
     description: "Beschreibung",
@@ -77,7 +94,7 @@ DE.extend({
     photographer: "Fotograf"
 });
 
-galleryChooser.InfoBox.Lang.EN = EN = Model.create();
+Models.pictureViewer.InfoBox.Lang.EN = EN = Model.create();
 EN.extend({
     copyright: "Copyright",
     description: "Description",
@@ -87,13 +104,7 @@ EN.extend({
     photographer: "Photographer"
 });
 
-galleryChooser.CSS = CSS = Model.create();
-CSS.extend({
-    closedRight: -1, 
-    closedWidth: -1,
-    openedWidth: -1,
-    paddingTop: 0,
-    paddingLeft: 0,
-    paddingRight: 0,
-    paddingBottom: 0
-});
+Models.pictureBox = {};
+
+
+
