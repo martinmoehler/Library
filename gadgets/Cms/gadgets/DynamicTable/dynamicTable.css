@@ -55,16 +55,23 @@ body {
     background-color: rgba(210,210,210,.6);
     
     padding: 5px;
-    
     font-size: 10pt;
     
+    box-shadow: 2px 2px 2px rgba(0,0,0,.4);
+    
+    cursor: pointer;
 }
 
 .tmpl_infos .tmpl_table_box {
     display: none; 
     z-index: 5;
     
-    overflow: auto;
+    overflow: visible;
+    
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    
 } 
 .tmpl_box table {
     position: absolute;
@@ -75,13 +82,17 @@ body {
     float: left;
     display: none;
     
-    position: absolute;
+    position: relative;
     z-index: 100;
     
-    font-size: 12pt;
+    font-size: 36pt;
     font-weight: bold;
-    margin-left: 5px;
-    margin-top: 15px;
+    text-shadow: 1px 1px 2px black;
+    opacity: .4;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    line-height: 200px;
 }
 
 .tmpl_hr {

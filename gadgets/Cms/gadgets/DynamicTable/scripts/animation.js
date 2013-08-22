@@ -13,8 +13,8 @@
 
         id = con.attr('id').split("-")[1];
 
-        if (lastId) lastObject = $("div.tmpl_title",'#'+lastId).html().replace(/ /g, "_"); 
-        object = $("div.tmpl_title", con).html().replace(/ /g, "_");
+        if (lastId) lastObject = $("div.tmpl_identity",'#'+lastId).html().replace(/ /g, "_"); 
+        object = $("div.tmpl_identity", con).html().replace(/ /g, "_");
 
         if(lastObject && init['tmpl_multiOpen'] === false && lastObject !== object) {
 
@@ -31,8 +31,8 @@
         if (id) lastId = "tmpl_box-"+ id;
         id = con.attr('id').split("-")[1];
 
-        if (lastId) lastObject = $("div.tmpl_title",'#'+lastId).html().replace(/ /g, "_"); 
-        object = $("div.tmpl_title", con).html().replace(/ /g, "_");
+        if (lastId) lastObject = $("div.tmpl_identity",'#'+lastId).html().replace(/ /g, "_"); 
+        object = $("div.tmpl_identity", con).html().replace(/ /g, "_");
 
         if(lastObject) {
             table[lastObject].template.clearAnimations();
@@ -48,8 +48,8 @@
         if (id) lastId = "tmpl_box-"+ id;
         id = con.attr('id').split("-")[1];
 
-        if (lastId) lastObject = $("div.tmpl_title",'#'+lastId).html().replace(/ /g, "_");  
-        object = $("div.tmpl_title", con).html().replace(/ /g, "_");
+        if (lastId) lastObject = $("div.tmpl_identity",'#'+lastId).html().replace(/ /g, "_");  
+        object = $("div.tmpl_identity", con).html().replace(/ /g, "_");
 
         if(lastObject) {
             table[lastObject].template.clearAnimations();

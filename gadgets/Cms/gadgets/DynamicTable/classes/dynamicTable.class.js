@@ -6,7 +6,9 @@ function Template(containerID){
     
     this.container = $('#'+containerID);
     this.position = this.container.position();
-
+    
+    this.padding = init['tmpl_padding'];
+    
     this.openHeight = init['tmpl_popUpHeight'];
     this.openWidth = init['tmpl_popUpWidth'];
     this.openTop = this.position.top - (init['tmpl_popUpHeight'] - init['tmpl_height'])/ 2;
@@ -107,7 +109,16 @@ function Template(containerID){
         }, init['tmpl_animationTime']);
 
         $('img', this.container).animate({
-            left: 5,
+            left: (function(){
+                switch (classTemplate.picPosition) {
+                    case 'left' :
+                        return 5;
+                        break;
+                    case 'center' :
+                        return (classTemplate.closeWidth - classTemplate.picClose) / 2 + classTemplate.padding;
+                        break;
+                }
+            })(),
             top: 5,
             width: this.picClose,
             height: this.picClose,

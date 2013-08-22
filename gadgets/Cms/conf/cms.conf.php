@@ -9,19 +9,17 @@
     $setup = Array (
         'Gallery' => Array (
             'id' => 0,
-            'parentKey' => 'Gallery',
-            'setupName' => 'Galerie',
-            'setupPath' => '...',
-            'setupPicture' => '...',
-            'setupPictureAlt' => '...'
+            'mgmtName' => 'Galerie',
+            'mgmtPath' => '...',
+            'mgmtPicture' => 'gfx/gallery.png',
+            'mgmtPictureAlt' => '...'
         ),
         'Calendar' => Array (
             'id' => 1,                  
-            'parentKey' => ' ',         //Will be replaced with the right Key anyway...
-            'setupName' => 'Galerie',
-            'setupPath' => '..',
-            'setupPicture' => '...',
-            'setupPictureAlt' => '...'
+            'mgmtName' => 'Kalender',
+            'mgmtPath' => '..',
+            'mgmtPicture' => 'gfx/calendar.png',
+            'mgmtPictureAlt' => '...'
         )
     );
     

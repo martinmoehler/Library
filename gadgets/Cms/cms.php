@@ -13,10 +13,6 @@
     
 ?>
 
-    
-
-
-
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -29,13 +25,20 @@
         <link href="gadgets/DynamicTable/dynamicTable.css" rel="stylesheet" type="text/css">
         
         <script src="scripts/jquery.js" type="text/javascript"></script>
+        <script src="classes/ClassLibrary.js" type="text/javascript"></script>
+        <script src="classes/MVC.js" type="text/javascript"></script>
+        <script src="classes/workspace.js" type="text/javascript"></script>
+        
         <script src="gadgets/DynamicTable/classes/dynamicTable.class.js" type="text/javascript"></script>
         
         <script type="text/javascript">
+            var workspace;
             
             var table = <?php echo $table->printDataAsJSObject() ?>;
             var init = <?php echo json_encode($init) ?>;
+            var DynamicTableLog = <?php echo json_encode($table->getLog()); ?>;
             
+            console.log("DynamicTable Log: \n" + DynamicTableLog );
             
             $(document).ready(function(){
                 for (i in table){
@@ -44,7 +47,13 @@
                 $.ajaxSetup ({
                     cache: false
                 });
+            
+                
+                Workspace.build([110, 35, 990, 700],'#main');
+                
             });
+        
+            
         </script>
     </head>
     <body>
@@ -57,7 +66,23 @@
                 <?php
                     $table->printTemplates("gadgets/DynamicTable/templates/dynamicTable.tpl.php");
                 ?>
-                <script src="gadgets/DynamicTable/scripts/animation.js"></script>
+                <script type="text/javascript" src="gadgets/DynamicTable/scripts/animation.js"></script>
+                <script type="text/javascript">
+                    $(".tmpl_box").click(function(){
+                        var managerSrc;
+                        var workspace = $('#workspace');
+                        var id = con.attr('id').split("-")[1];
+                        
+                        for (manager in table) {
+                            if (manager.id == id) {
+                                managerSrc = manager.mgmtPath;
+                                break;
+                            }
+                        }
+                        
+                        
+                    });
+                </script>
             </div>
             
         </div>

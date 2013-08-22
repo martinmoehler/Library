@@ -67,13 +67,14 @@
                 //Check for right content
                 if( is_array($_templatesData)) {
                     foreach ($_templatesData as $key => $value) {
+                        //Set the 'parentKey'
+                        $_templatesData[$key]['parentKey'] = $key;
+                        
                         //Make sure these Fields are existing
-                        if (!is_array($value) || !key_exists('id', $value) || !key_exists('parentKey', $value)) {
-                            $this->_log('Fehler: $_templatesData['.$key.'] hat nicht das richtige Format! ', $_templatesData);
+                        if (!is_array($value) || !key_exists('id', $value)) {
+                            $this->_log('Fehler: $_templatesData['.$key.'] hat nicht das richtige Format! ', $_templatesData[$key]);
                             return;
                         }
-                        //Make sure the 'parentKey' -Field is set up correctly
-                        if($_templatesData[$key]['parentKey'] != $key) $_templatesData[$key]['parentKey'] = $key;
                     }
                 }   
                 
@@ -86,6 +87,7 @@
             
             
             $this->_countReleases();
+            
         }
         
         
@@ -196,8 +198,11 @@
         
         
         public function getWidth(){
-            
-            return $this->_templateVars['tmpl_columns'] * $this->_templateVars['tmpl_columnWidth'];
+            if ($this->_templateVars['tmpl_returnWidth'] == 'complete')  {
+                return $this->_templateVars['tmpl_columns'] * $this->_templateVars['tmpl_columnWidth'] + ($this->_templateVars['tmpl_columns']*$this->_templateVars['tmpl_padding'] * 2);
+            } elseif ($this->_templateVars['tmpl_returnWidth'] == 'fit') {
+                return $this->_templateVars['tmpl_columns'] * $this->_templateVars['tmpl_columnWidth'] + ($this->_templateVars['tmpl_columns']*$this->_templateVars['tmpl_padding'] * 2) - ($this->_templateVars['tmpl_columnWidth'] - $this->_templateVars['tmpl_width']);
+            }
         }
         
     }
